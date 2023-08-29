@@ -7,6 +7,8 @@ from aws_cdk import (
     aws_cognito as _cognito,
     Duration,
     RemovalPolicy,
+    CfnOutput,
+    Fn,
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -38,8 +40,8 @@ class MustApiBackendStack(Stack):
                 email=True,
                 phone=False,
                 username=False))
-        # a lambda function called query_bedrock
-        query_bedrock = python.PythonFunction(self, "ApiBackend",
+        # a lambda function called api_backend
+        api_backend = python.PythonFunction(self, "ApiBackend",
             entry="app/lambda",
             index="api.py",  
             handler="handler",
@@ -50,7 +52,7 @@ class MustApiBackendStack(Stack):
                 },
             timeout=Duration.seconds(120),
             layers=[
-                python.PythonLayerVersion(self, "bedrock",
+                python.PythonLayerVersion(self, "api_layer",
                     entry="lib/python",
                     compatible_runtimes=[_lambda.Runtime.PYTHON_3_9]
                 )
@@ -78,15 +80,20 @@ class MustApiBackendStack(Stack):
         # )
         
         # a method for the api that calls the bedrock lambda function
-        query_bedrock_integration = apigateway.LambdaIntegration(query_bedrock,
+        api_backend_integration = apigateway.LambdaIntegration(api_backend,
                 request_templates={"application/json": '{ "statusCode": "200" }'})
         
         # add the  LambdaIntegration to the api gateway using user_pool as the authorization
-        query_bedrock_resource = api_gateway.root.add_resource("query_bedrock")
-        method_query_bedrock = query_bedrock_resource.add_method(
-            "POST", query_bedrock_integration,
-            # authorization_type=apigateway.AuthorizationType.COGNITO,
-            # authorizer=apigateway.CognitoUserPoolsAuthorizer(
-            #     self, "IdpAuthorizer",
-            #     cognito_user_pools=[user_pool])
+        api_backend_resource = api_gateway.root.add_resource("api_backend")
+        method_api_backend = api_backend_resource.add_method(
+            "POST", api_backend_integration,
+            authorization_type=apigateway.AuthorizationType.COGNITO,
+            authorizer=apigateway.CognitoUserPoolsAuthorizer(
+                self, "IdpAuthorizer",
+                cognito_user_pools=[user_pool])
                 )
+        
+        post_autentication_lambda_arn = Fn.import_value("CW-workshop-post-autentication-lambda")
+        # reference the post_autentication_lambda
+        post_autentication_lambda = _lambda.Function.from_function_arn(self, "post_autentication_lambda_ref", post_autentication_lambda_arn)
+        user_pool.add_trigger(_cognito.UserPoolOperation.POST_AUTHENTICATION, post_autentication_lambda)
