@@ -36,6 +36,23 @@ class ExtraLogForensisStack(Stack):
                 )
             ]
         )
+        etl_lambda = python.PythonFunction(self, "AthenaQuery",
+            entry="app/lambda",
+            index="query.py",  
+            handler="handler",
+            runtime=_lambda.Runtime.PYTHON_3_9,
+            environment={
+                #"BUCKET_NAME": s3_bucket.bucket_name,
+                "PREFIX": "output/",
+                },
+            timeout=Duration.seconds(120),
+            layers=[
+                python.PythonLayerVersion(self, "athena_query_layer",
+                    entry="lib/python",
+                    compatible_runtimes=[_lambda.Runtime.PYTHON_3_9]
+                )
+            ]
+        )
         bucket_name = os.environ.get("BUCKET_NAME", "athena-results-bucket")
         if not bucket_name:
             raise ValueError("BUCKET_NAME environment variable is not set")
