@@ -5,18 +5,22 @@ var bucketName = "cw-workshop";
 var bucketRegion = "us-east-1";
 var IdentityPoolId = "1234567890";
 
-AWS.config.update({
-                region: bucketRegion,
-                credentials: new AWS.CognitoIdentityCredentials({
-                IdentityPoolId: IdentityPoolId
-                })
-            });
+//extract token from web url querystring parameters and assign it to a variable called token 
+const token = new URLSearchParams(window.location.search).get('id_token');
 
-            var s3 = new AWS.S3({
-                apiVersion: '2006-03-01',
-                params: {Bucket: bucketName}
-});
-        
+
+//A function that validates a cognito jwt tokenken
+
+function validateJWTToken(token) {
+    var url = apiurl + '/validate';
+    var headers = {
+        'Authorization': 'Bearer ' + token
+    };
+    return post(url, {}, headers);
+}
+
+
+
 //a function that takes the value of the access code and sends it to the api endpoint  and returns the response as a json object
  function post(url, data, headers = {}) {
      return $.ajax({
