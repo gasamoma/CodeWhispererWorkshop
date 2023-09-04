@@ -1,58 +1,51 @@
+# CodeWhispererWorkshop
 
-# Welcome to your CDK Python project!
+<h1 align="center">PLACEHOLDER</h1>
+<h3 align="center">PLACEHOLDER</h3>
 
-This is a blank project for CDK development with Python.
+## Tabla de Contenido
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+- 🔭 [Cplaceholder](https://placeholder)
 
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the `.venv`
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
+- 👤 [placeholder](https://placeholder)
 
-To manually create a virtualenv on MacOS and Linux:
+- 🚀 [placeholder](https://placeholder)
 
-```
-$ python3 -m venv .venv
-```
+- 👯 [placeholder](https://placeholder)
 
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
+- :eye: [placeholder](https://placeholder)
 
-```
-$ source .venv/bin/activate
-```
+- 🤝 [Comandos Network](https://placeholder)
 
-If you are a Windows platform, you would activate the virtualenv like this:
 
-```
-% .venv\Scripts\activate.bat
-```
+## placeholder
+1. placeholder [placeholder](https://placeholder)
+    **placeholder:** placeholder
+    **placeholder:** placeholder
 
-Once the virtualenv is activated, you can install the required dependencies.
+### placeholder
 
-```
-$ pip install -r requirements.txt
-```
+![](./images/emailcode.png)
 
-At this point you can now synthesize the CloudFormation template for this code.
 
-```
-$ cdk synth
-```
 
-To add additional dependencies, for example other CDK libraries, just add
-them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-command.
+1. placeholder
+2. placeholder
+3. placeholder
+4. placeholder
 
-## Useful commands
+### placeholder
 
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
+1. placeholder
 
-Enjoy!
+    `$ placeholder`
+
+
+2. Confirma la instalacion:
+
+    `$ placeholder`
+
+    - placeholder:
+        ```
+            placeholder
+        ```
