@@ -48,6 +48,7 @@ class MustApiBackendStack(Stack):
             runtime=_lambda.Runtime.PYTHON_3_9,
             environment={
                 #"BUCKET_NAME": s3_bucket.bucket_name,
+                "POST_AUTH": post_auth_exists,
                 "PREFIX": "output/",
                 },
             timeout=Duration.seconds(120),
