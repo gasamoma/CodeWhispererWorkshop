@@ -1,7 +1,6 @@
 # a basic lambda handler dor api gateway proxy
 import json
 import boto3
-from security import *
 
 
 def lambda_handler(event, context):
