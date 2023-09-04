@@ -17,7 +17,13 @@ class MustApiBackendStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        
+        post_auth_exists = "0"
+        try:
+            test_post_autentication_lambda_arn = Fn.import_value("CW-test-workshop-post-autentication-lambda")
+            post_auth_exists =  "1"
+        # if import_value does not work continue
+        except:
+            pass
         # a cognito user pool that uses cognito managed login sign up and password recovery
         user_pool = _cognito.UserPool(
             self, "IdpUserPool0",
@@ -48,6 +54,7 @@ class MustApiBackendStack(Stack):
             runtime=_lambda.Runtime.PYTHON_3_9,
             environment={
                 #"BUCKET_NAME": s3_bucket.bucket_name,
+                "POST_AUTH": post_auth_exists,
                 "PREFIX": "output/",
                 },
             timeout=Duration.seconds(120),
