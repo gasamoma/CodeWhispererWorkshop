@@ -1,11 +1,22 @@
 //a variable that captures the value of a input field called access - code
 const accessCode = $("#access-code");
 const apiurl = 'https://1236546123.execute-api.us-east-1.amazonaws.com/prod/api_backend';
-var bucketName = BUCKET_NAME;
-var bucketRegion = BUCKET_REGION;
-var IdentityPoolId = IDENTITY_POOL_ID;
+var bucketName = "cw-workshop";
+var bucketRegion = "us-east-1";
+var IdentityPoolId = "1234567890";
 
+AWS.config.update({
+                region: bucketRegion,
+                credentials: new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: IdentityPoolId
+                })
+            });
 
+            var s3 = new AWS.S3({
+                apiVersion: '2006-03-01',
+                params: {Bucket: bucketName}
+});
+        
 //a function that takes the value of the access code and sends it to the api endpoint  and returns the response as a json object
  function post(url, data, headers = {}) {
      return $.ajax({
