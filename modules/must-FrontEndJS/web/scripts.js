@@ -1,4 +1,3 @@
-
 //a variable that captures the value of a input field called access - code
 const accessCode = $("#access-code");
 const apiurl = 'https://1236546123.execute-api.us-east-1.amazonaws.com/prod/api_backend';
