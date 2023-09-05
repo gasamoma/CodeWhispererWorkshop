@@ -85,7 +85,7 @@ $(document).ready(function() {
              'Authorization': 'Bearer '+id_token
          }
         // do a post request to this endpoint https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/get_user_files
-        post('https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/login',{}, headers).then(response => {
+        post('https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend',{}, headers).then(response => {
 
             // and get the list of files from the response
             const files = response;
