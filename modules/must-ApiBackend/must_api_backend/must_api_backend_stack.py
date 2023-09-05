@@ -123,6 +123,15 @@ class MustApiBackendStack(Stack):
                 self, "IdpAuthorizer",
                 cognito_user_pools=[user_pool])
                 )
+        deployment = apigateway.Deployment(self, "Deployment",
+            api=api_gateway,
+            description="This is the CodeWhisperer API Gateway Deployment")
+            
+        # create an apigateway stage deployment called prod
+        # api_backend_stage = api_gateway.Stage(
+        #     "prod",
+        #     stage_name="prod")
+        
         # get the ssm parameter for CW-workshop-post-autentication-lambda
         post_autentication_lambda_arn = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-lambda")
         # reference the post_autentication_lambda

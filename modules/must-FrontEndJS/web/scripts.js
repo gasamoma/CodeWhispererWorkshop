@@ -15,7 +15,7 @@ $(document).ready(function() {
             url: url,
             data: JSON.stringify(data),
             dataType: 'json',
-            headers: JSON.stringify(headers)
+            headers: headers
             }
         );
     }

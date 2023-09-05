@@ -17,12 +17,13 @@ min_confidence = int(environ.get('CONFIDENCE', 70))
 def handler(event, context):
     # the event is a api gateway proxy event
     # get the bucket and key from the event
+    
+    security.check_auth(event)
     body =  event['body']
     body = json.loads(body)
     key = body['key']
     bucket = body['bucket']
     uidd = body['uidd']
-    security.check_auth(event)
     # call the detect_faces function
     response = detect_faces(bucket, key)
     # get the eyes_open and mouth_open attributes
