@@ -17,7 +17,7 @@ $(document).ready(function() {
             url: url,
             data: JSON.stringify(data),
             dataType: 'json',
-            headers: JSON.stringify(headers)
+            headers: headers
             }
         );
     }
@@ -82,7 +82,7 @@ $(document).ready(function() {
         console.log("finished loading")
         // create a header Authorization with the id_token
         headers= {
-             'Authorization': id_token
+             'Authorization': 'Bearer '+id_token
          }
         // do a post request to this endpoint https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/get_user_files
         post('https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/login',{}, headers).then(response => {
