@@ -1,11 +1,13 @@
 # a basic lambda handler for Amazon cognito post authorization
 import json
 import boto3
-import uuid
+import uuid as _uuid
+import os
+
 
 def lambda_handler(event, context):
     # create a UUID 8 digit string
-    uuid = str(uuid4())[:8]
+    uuid = str(_uuid.uuid4())[:8]
     # load the dynamodb table name from os
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
