@@ -9,6 +9,8 @@ from aws_cdk import (
     RemovalPolicy,
     CfnOutput,
     Fn,
+    aws_ssm as ssm,
+    aws_iam as iam,
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -18,6 +20,9 @@ class MustApiBackendStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         post_auth_exists = "0"
+        # get the CW-workshop-post-autentication-dynamo ssm parameter
+        post_autentication_dynamo_table_name = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-dynamo")
+        
         try:
             test_post_autentication_lambda_arn = Fn.import_value("CW-test-workshop-post-autentication-lambda")
             post_auth_exists =  "1"
@@ -54,6 +59,8 @@ class MustApiBackendStack(Stack):
             runtime=_lambda.Runtime.PYTHON_3_9,
             environment={
                 #"BUCKET_NAME": s3_bucket.bucket_name,
+                # post_autentication_dynamo_table_name
+                "POST_AUTHENTICATION_DYNAMO_TABLE_NAME": post_autentication_dynamo_table_name,
                 "POST_AUTH": post_auth_exists,
                 "PREFIX": "output/",
                 },
@@ -82,9 +89,26 @@ class MustApiBackendStack(Stack):
                 domain_prefix="cw-workshop-demo-domain"
             )
         )
-        # sign_in_url = domain.sign_in_url(client,
-        #     redirect_uri="https://"+cloudfront_website.distribution_domain_name+"/index.html"
-        # )
+        
+        
+        redirect_uri = Fn.import_value("RedirectUri")
+        # a cognito client with callback to the cloudfront_website
+        client = user_pool.add_client("app-client",
+            o_auth=_cognito.OAuthSettings(
+                flows=_cognito.OAuthFlows(
+                    implicit_code_grant=True
+                ),
+                # the cloudfront distribution root url
+                callback_urls=[redirect_uri]
+            ),
+            auth_flows=_cognito.AuthFlow(
+                user_password=True,
+                user_srp=True
+            )
+        )
+        sign_in_url = domain.sign_in_url(client,
+            redirect_uri=redirect_uri
+        )
         
         # a method for the api that calls the bedrock lambda function
         api_backend_integration = apigateway.LambdaIntegration(api_backend,
@@ -99,8 +123,18 @@ class MustApiBackendStack(Stack):
                 self, "IdpAuthorizer",
                 cognito_user_pools=[user_pool])
                 )
-        
-        post_autentication_lambda_arn = Fn.import_value("CW-workshop-post-autentication-lambda")
+        # get the ssm parameter for CW-workshop-post-autentication-lambda
+        post_autentication_lambda_arn = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-lambda")
         # reference the post_autentication_lambda
         post_autentication_lambda = _lambda.Function.from_function_arn(self, "post_autentication_lambda_ref", post_autentication_lambda_arn)
         user_pool.add_trigger(_cognito.UserPoolOperation.POST_AUTHENTICATION, post_autentication_lambda)
+        # create a resurce based polocy for the post_autentication_lambda allows cognito service to invoke it
+        post_autentication_lambda.add_permission("post_autentication_lambda_permission",
+            source_arn=post_autentication_lambda_arn,
+            principal=iam.ServicePrincipal("cognito-idp.amazonaws.com"))
+        
+            
+        
+        
+        # CfnOutput the user_pool login url
+        CfnOutput(self, "UserPoolLoginUrl", value=sign_in_url)
