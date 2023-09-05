@@ -8,6 +8,8 @@ from aws_cdk import (
     Fn,
     CfnOutput,
     aws_dynamodb as dynamodb,
+    aws_ssm as ssm,
+    aws_iam as iam,
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -19,8 +21,13 @@ class MustCognitoSecurityStack(Stack):
         # a dinamoDb table with ondemand capacity 
         dynamoDbTable = dynamodb.Table(self, "MustCognitoSecurityTable",
             partition_key=dynamodb.Attribute(
-                name="id",
+                name="user-email",
                 type=dynamodb.AttributeType.STRING
+                ),
+                # add date as range key
+                sort_key=dynamodb.Attribute(
+                    name="date",
+                    type=dynamodb.AttributeType.STRING
                 ),
                 # billing type ondemand
                 billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST)
@@ -31,7 +38,7 @@ class MustCognitoSecurityStack(Stack):
             runtime=_lambda.Runtime.PYTHON_3_9,
             environment={
                 #"BUCKET_NAME": s3_bucket.bucket_name,
-                "TABLE_NAME": dynamoDbTable.table_name,
+                "DYNAMODB_TABLE": dynamoDbTable.table_name,
                 "PREFIX": "output/",
                 },
             timeout=Duration.seconds(120),
@@ -42,7 +49,21 @@ class MustCognitoSecurityStack(Stack):
                 )
             ]
         )
-        # CfnOutput the post_autentication_lambda arn
-        CfnOutput(self, "post_autentication_lambda", value=post_autentication_lambda.function_arn, export_name="CW-workshop-post-autentication-lambda")
+        # add permisions to the post_autentication_lambda to put items in teh dyanmo table
+        post_autentication_lambda.add_to_role_policy(
+            iam.PolicyStatement(
+                actions=["dynamodb:PutItem"],
+                resources=[dynamoDbTable.table_arn]
+                ))
+        # an ssm parameter with the post_autentication_lambda arn
+        ssm.StringParameter(self, "post_autentication_lambda_arn",
+            parameter_name="CW-workshop-post-autentication-lambda",
+            string_value=post_autentication_lambda.function_arn)
+        # an ssm parameter for post_autentication_dynamo
+        ssm.StringParameter(self, "post_autentication_dynamo_table_name",
+            parameter_name="CW-workshop-post-autentication-dynamo",
+            string_value=dynamoDbTable.table_name)
+            
+        
         
         

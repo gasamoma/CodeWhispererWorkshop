@@ -13,6 +13,29 @@ logger = logging.getLogger(__name__)
 
 # Get the model ARN and confidence.
 min_confidence = int(environ.get('CONFIDENCE', 70))
+# a lambda handler for the api gateway post
+def handler(event, context):
+    # the event is a api gateway proxy event
+    # get the bucket and key from the event
+    
+    security.check_auth(event)
+    body =  event['body']
+    body = json.loads(body)
+    key = body['key']
+    bucket = body['bucket']
+    uidd = body['uidd']
+    # call the detect_faces function
+    response = detect_faces(bucket, key)
+    # get the eyes_open and mouth_open attributes
+    eyes_open, mouth_open = get_eyes_mouth_open(response)
+    # get the eye_direction
+    eye_direction = get_eye_direction(response)
+    # sum the confidence values
+    confidence = sum_confidence(eyes_open, mouth_open)
+    # check if the user is authorized
+    check_if_authorized(confidence, eye_direction, security.POST_AUTH)
+    # return the response
+    return response
 
 #function that gets an image from an s3 bucket and calls rekognition detect_faces api to get the face attributes
 #returns the response

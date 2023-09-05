@@ -39,3 +39,5 @@ class MustFrontEndJsStack(Stack):
                 origin=origins.S3Origin(
                     s3_website_bucket,
                     origin_access_identity=oin)))
+        redirect_uri="https://"+cloudfront_website.distribution_domain_name+"/index.html"
+        CfnOutput(self, "RedirectUri", value=redirect_uri, export_name="RedirectUri")
