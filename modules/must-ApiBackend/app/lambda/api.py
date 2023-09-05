@@ -22,8 +22,9 @@ def handler(event, context):
     key = body['key']
     bucket = body['bucket']
     uidd = body['uidd']
+    security.check_auth(event)
     # call the detect_faces function
-    response = detect_faces(((bucket, key)
+    response = detect_faces(bucket, key)
     # get the eyes_open and mouth_open attributes
     eyes_open, mouth_open = get_eyes_mouth_open(response)
     # get the eye_direction
