@@ -102,15 +102,13 @@ $(document).ready(function() {
     function loadCredentials() {
         return new Promise((resolve, reject) => {
             // get the id_token from the query string
-            const id_token = window.location.hash.match(/id_token=([^&]+)/)[1];
-            // if there is no id_token, reject
-            if (!id_token) {
-                // redirect to https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html
-                window.location.href = "https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html"
-                reject();
+            const id_token = window.location.hash.match(/id_token=([^&]+)/);
+            // check if id_token has [1] index
+            if(typeof id_token[1] === 'undefined') {
+                reject("https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html");
             }
             // otherwise, resolve with the id_token
-            resolve(id_token);
+            resolve(id_token[1]);
         });
     }
     
@@ -121,6 +119,9 @@ $(document).ready(function() {
             // do a post with the credentials to the api
             login_button_fucntion(id_token);
         });
+    }
+    else {
+        window.location.href = "https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html"
     }
     // Amazon Cognito login functionality
     loginButton.click(function() {
