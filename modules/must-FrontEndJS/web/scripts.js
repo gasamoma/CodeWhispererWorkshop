@@ -3,13 +3,24 @@
 
 
 $(document).ready(function() {
-    // Document selection functionality
-    const documentDropdown = $("#document-dropdown");
-    // Search functionality
-    const searchButton = $("#search-button");
-    const searchInput = $("#search-input");
-    const searchResultsContainer = $("#search-results-container");
-    searchResultsContainer.hide();
+    //declare the presignedUrlvariable
+    let presignedUrl;
+    const loadingOverlay = document.getElementById("loading-overlay");
+    // get the id="submit-button" element
+    const submitButton = document.getElementById("submit-button");
+    // Function to show the loading overlay
+    function showLoadingOverlay() {
+        loadingOverlay.style.display = "block";
+    }
+
+    // Function to hide the loading overlay
+    function hideLoadingOverlay() {
+        loadingOverlay.style.display = "none";
+    }
+    hideLoadingOverlay();
+    // Call the showLoadingOverlay function when you want to display the overlay
+    // Call the hideLoadingOverlay function when your
+    
     // a fucntion that does a jquery post
     function post(url, data, headers={}) {
         return $.ajax({
@@ -21,64 +32,27 @@ $(document).ready(function() {
             }
         );
     }
-
-    // a fucntion called populateDocumentDropdown that recienves a file list and adds it to the dropdown menu
-    function populateDocumentDropdown(fileList) {
-        documentDropdown.empty();
-        for (let i = 0; i < fileList.length; i++) {
-            const file = fileList[i];
-            documentDropdown.append(new Option(file, file));
-        }
-    }
-
-
-    searchButton.click(function() {
-        const searchText = searchInput.val();
-        // do a api request to : 'https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/query_bedrock'
-        // create a
-        post('https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/query_bedrock', {
-            'query': searchText,
-            // get the selected document from the dropdown menu
-            'key': documentDropdown.val(),
-
-        }).then(response => {
-            // show the response in the in the search results container
-            
-            searchResultsContainer.empty();
-            searchResultsContainer.show();
-            searchResultsContainer.text(response);
+    // a fucntion tha does a jquery get.
+    function get(url, headers={}) {
+        return $.ajax({
+            type: 'GET',
+            url: url,
+            headers: headers
         });
-
-    });
-
-    // Display search results
-    function displaySearchResults(results) {
-        searchResultsContainer.empty();
-        
-        searchResultsContainer.show();
-        
-
-        if (results && results.length > 0) {
-            const ul = $("<ul>");
-            results.forEach(result => {
-                const li = $("<li>").text(result);
-                ul.append(li);
-            });
-            searchResultsContainer.append(ul);
-        }
-        else {
-            searchResultsContainer.text('No results found.');
-        }
     }
-    const loginButton = $("#login-button");
-    const documentSelection = $("#document-selection");
-    const openDocumentButton = $("#open-document-button");
-    const searchContainer = $("#search-container");
-    // Open selected document
-    openDocumentButton.click(function() {
-        searchContainer.show();
-    });
-    function login_button_fucntion(id_token){
+    // a function that uses get to get the presigned url from this api https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend and receives the id_token
+    function get_presigned_url(id_token) {
+        // create a header Authorization with the id_token
+        headers = {
+            'Authorization': 'Bearer ' + id_token
+        }
+        // do a get request to this endpoint /get_presigned_url
+        return get('https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend', headers).then(response => {
+            // and return the presigned url
+            return response;
+        });
+    }
+    function submit_button_function(id_token){
         console.log("finished loading")
         // create a header Authorization with the id_token
         headers= {
@@ -114,22 +88,24 @@ $(document).ready(function() {
     
     // if id_token is present in the query string
     if (window.location.hash.includes('id_token')) {
-        // show the search container
+        // get a pressigned url from the api
         loadCredentials().then(id_token => {
-            // do a post with the credentials to the api
-            login_button_fucntion(id_token);
+            get_presigned_url(id_token).then(response => {
+                // store the presigned url in a global mutable variable
+                presignedUrl = response;
+            });
         });
-    }
-    else {
+        // Amazon Cognito login functionality
+        submitButton.click(function() {
+            loadCredentials().then(id_token => {
+                // do a post with the credentials to the api
+                submit_button_function(id_token);
+            });
+        });
+    }else {
         window.location.href = "https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html"
     }
-    // Amazon Cognito login functionality
-    loginButton.click(function() {
-        loadCredentials().then(id_token => {
-            // do a post with the credentials to the api
-            login_button_fucntion(id_token);
-        });
-    });
+    
     
     //const signed="https://deepracer-destination.s3.amazonaws.com/"
     // a function that takes an s3 signed url as a parameter and uses it to upload a file. 
@@ -148,13 +124,7 @@ $(document).ready(function() {
     
     
     
-    // a fucntion tha does a jquery get.
-    //function get(url) {
-    //    return $.ajax({
-    //        type: 'GET',
-    //        url: url
-    //    });
-    //}
+    
     
     // call the apigateway to get a signed url. 
     //function getSignedUrl(fileName) {
