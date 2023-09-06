@@ -84,7 +84,7 @@ $(document).ready(function() {
         headers= {
              'Authorization': 'Bearer '+id_token
          }
-        // do a post request to this endpoint https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/get_user_files
+        // do a post request to this endpoint /get_user_files
         post('https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend',{}, headers).then(response => {
 
             // and get the list of files from the response
@@ -105,6 +105,8 @@ $(document).ready(function() {
             const id_token = window.location.hash.match(/id_token=([^&]+)/)[1];
             // if there is no id_token, reject
             if (!id_token) {
+                // redirect to https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html
+                window.location.href = "https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html"
                 reject();
             }
             // otherwise, resolve with the id_token

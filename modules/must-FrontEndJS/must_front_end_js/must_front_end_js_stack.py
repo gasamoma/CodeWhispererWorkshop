@@ -6,6 +6,7 @@ from aws_cdk import (
     aws_cloudfront as _cf,
     aws_s3_deployment as s3deploy,
     aws_cloudfront_origins as origins,
+    aws_ssm as ssm,
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -19,6 +20,8 @@ class MustFrontEndJsStack(Stack):
         s3_website_bucket = s3.Bucket(
             self, "CW-worshop-WebsiteBucket"
             )
+        user_pool_login_url = ssm.StringParameter.value_for_string_parameter(self, "user_pool_login_url")
+        
         s3deploy.BucketDeployment(self, "DeployWebsite",
             sources=[s3deploy.Source.asset("./web/")],
             destination_bucket=s3_website_bucket
@@ -39,5 +42,11 @@ class MustFrontEndJsStack(Stack):
                 origin=origins.S3Origin(
                     s3_website_bucket,
                     origin_access_identity=oin)))
+        
+        
+        CfnOutput(self, "user_pool_login_url", value=user_pool_login_url)
         redirect_uri="https://"+cloudfront_website.distribution_domain_name+"/index.html"
         CfnOutput(self, "RedirectUri", value=redirect_uri, export_name="RedirectUri")
+        ssm.StringParameter(self, "redirect_uri",
+            parameter_name="redirect_uri",
+            string_value=redirect_uri)

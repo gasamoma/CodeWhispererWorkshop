@@ -143,20 +143,17 @@ class MustApiBackendStack(Stack):
         
         # add the  LambdaIntegration to the api gateway using user_pool as the authorization
         api_backend_resource = api_gateway.root.add_resource("api_backend")
+        autorizer=apigateway.CognitoUserPoolsAuthorizer(
+                self, "IdpAuthorizer",
+                cognito_user_pools=[user_pool])
         method_api_backend = api_backend_resource.add_method(
             "POST", api_backend_integration,
             authorization_type=apigateway.AuthorizationType.COGNITO,
-            authorizer=apigateway.CognitoUserPoolsAuthorizer(
-                self, "IdpAuthorizer",
-                cognito_user_pools=[user_pool])
-                )
+            authorizer=autorizer)
         method_api_backend_get = api_backend_resource.add_method(
             "GET", api_backend_get_integration,
             authorization_type=apigateway.AuthorizationType.COGNITO,
-            authorizer=apigateway.CognitoUserPoolsAuthorizer(
-                self, "api_backend_method_get",
-                cognito_user_pools=[user_pool])
-                )
+            authorizer=autorizer)
         deployment = apigateway.Deployment(self, "Deployment",
             api=api_gateway,
             description="This is the CodeWhisperer API Gateway Deployment")
@@ -179,5 +176,8 @@ class MustApiBackendStack(Stack):
             
         
         
+        ssm.StringParameter(self, "user_pool_login_url",
+            parameter_name="user_pool_login_url",
+            string_value=sign_in_url)
         # CfnOutput the user_pool login url
         CfnOutput(self, "UserPoolLoginUrl", value=sign_in_url)
