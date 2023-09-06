@@ -1,5 +1,7 @@
 // include https://code.jquery.com/jquery-3.6.0.min.js
 
+
+
 $(document).ready(function() {
     // Document selection functionality
     const documentDropdown = $("#document-dropdown");
@@ -125,4 +127,40 @@ $(document).ready(function() {
             login_button_fucntion(id_token);
         });
     });
+    
+    //const signed="https://deepracer-destination.s3.amazonaws.com/"
+    // a function that takes an s3 signed url as a parameter and uses it to upload a file. 
+    function uploadFile(signedUrl="https://deepracer-destination.s3.amazonaws.com/") {
+        // get the file from the input
+        const file = $("#fileUpload")[0].files[0];
+        // make a request to the signed url
+        $.ajax({
+            url: signedUrl,
+            type: 'PUT',
+            data: file,
+            processData: false,
+            contentType: false
+        });
+    }
+    
+    
+    
+    // a fucntion tha does a jquery get.
+    //function get(url) {
+    //    return $.ajax({
+    //        type: 'GET',
+    //        url: url
+    //    });
+    //}
+    
+    // call the apigateway to get a signed url. 
+    //function getSignedUrl(fileName) {
+        // do a post request to the api
+        //return get('https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/get_signed_url');
+    //}
+    
+ 
+ 
+    
+    
 });
