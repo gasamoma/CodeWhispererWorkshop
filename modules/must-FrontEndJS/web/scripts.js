@@ -53,6 +53,8 @@ $(document).ready(function() {
         });
     }
     function submit_button_function(id_token){
+        // show the loading overlay
+        showLoadingOverlay();
         console.log("finished loading")
         // create a header Authorization with the id_token
         headers= {

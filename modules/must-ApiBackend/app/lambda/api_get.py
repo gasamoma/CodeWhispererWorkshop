@@ -19,6 +19,11 @@ def lambda_handler(event, context):
         Params={'Bucket': os.environ['BUCKET'], 'Key': path}, 
         ExpiresIn=3600)
     return {
+        'headers': {
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Origin': os.environ['CORS_ORIGIN'] if 'CORS_ORIGIN' in os.environ else '*',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+            },
         'statusCode': 200,
         'body': json.dumps({'presigned_url':presigned_url})
     }
