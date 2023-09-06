@@ -22,7 +22,7 @@ def handler(event, context):
     body =  event['body']
     body = json.loads(body)
     key = body['key']
-    bucket = body['bucket']
+    bucket = environ['BUCKET']
     uidd = body['uidd']
     # call the detect_faces function
     response = detect_faces(bucket, key)

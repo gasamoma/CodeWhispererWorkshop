@@ -11,6 +11,7 @@ from aws_cdk import (
     Fn,
     aws_ssm as ssm,
     aws_iam as iam,
+    aws_s3 as s3,
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -51,6 +52,13 @@ class MustApiBackendStack(Stack):
                 email=True,
                 phone=False,
                 username=False))
+        # create the bucket
+        s3_file_bucket = s3.Bucket(
+            self, "cw-workshop-image-store",
+            versioned=True,
+            block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
+            encryption=s3.BucketEncryption.KMS_MANAGED
+            )
         # a lambda function called api_backend
         api_backend = python.PythonFunction(self, "ApiBackend",
             entry="app/lambda",
@@ -62,11 +70,28 @@ class MustApiBackendStack(Stack):
                 # post_autentication_dynamo_table_name
                 "POST_AUTHENTICATION_DYNAMO_TABLE_NAME": post_autentication_dynamo_table_name,
                 "POST_AUTH": post_auth_exists,
-                "PREFIX": "output/",
+                "BUCKET": s3_file_bucket.bucket_name,
                 },
             timeout=Duration.seconds(120),
             layers=[
                 python.PythonLayerVersion(self, "api_layer",
+                    entry="lib/python",
+                    compatible_runtimes=[_lambda.Runtime.PYTHON_3_9]
+                )
+            ]
+        )
+        # a lambda function called api_backend
+        api_back_get = python.PythonFunction(self, "ApiBackendGet",
+            entry="app/lambda",
+            index="api_get.py",
+            handler="handler",
+            runtime=_lambda.Runtime.PYTHON_3_9,
+            environment={
+                    "BUCKET": s3_file_bucket.bucket_name,
+                },
+            timeout=Duration.seconds(120),
+            layers=[
+                python.PythonLayerVersion(self, "api_layer_get",
                     entry="lib/python",
                     compatible_runtimes=[_lambda.Runtime.PYTHON_3_9]
                 )
@@ -113,6 +138,8 @@ class MustApiBackendStack(Stack):
         # a method for the api that calls the bedrock lambda function
         api_backend_integration = apigateway.LambdaIntegration(api_backend,
                 request_templates={"application/json": '{ "statusCode": "200" }'})
+        api_backend_get_integration = apigateway.LambdaIntegration( api_back_get,
+                request_templates={"application/json": '{ "statusCode": "200" }'})
         
         # add the  LambdaIntegration to the api gateway using user_pool as the authorization
         api_backend_resource = api_gateway.root.add_resource("api_backend")
@@ -121,6 +148,13 @@ class MustApiBackendStack(Stack):
             authorization_type=apigateway.AuthorizationType.COGNITO,
             authorizer=apigateway.CognitoUserPoolsAuthorizer(
                 self, "IdpAuthorizer",
+                cognito_user_pools=[user_pool])
+                )
+        method_api_backend_get = api_backend_resource.add_method(
+            "GET", api_backend_get_integration,
+            authorization_type=apigateway.AuthorizationType.COGNITO,
+            authorizer=apigateway.CognitoUserPoolsAuthorizer(
+                self, "api_backend_method_get",
                 cognito_user_pools=[user_pool])
                 )
         deployment = apigateway.Deployment(self, "Deployment",
