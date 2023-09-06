@@ -5,7 +5,7 @@ import uuid
 import json
 
 
-def lambda_handler(event, context):
+def handler(event, context):
     s3 = boto3.client('s3')
     # get the user email from the event cognito
     user_email = event['requestContext']['authorizer']['claims']['email']
