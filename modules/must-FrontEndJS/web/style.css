@@ -5,7 +5,7 @@ body, html {
 
 /* Apply a background image for the page */
 body {
-    background-image: url('space_background.jpg');
+    background-image: url('nebula.png');
     background-size: cover;
     font-family: Arial, sans-serif;
     color: #fff;

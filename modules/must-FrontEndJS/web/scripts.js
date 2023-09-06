@@ -5,17 +5,30 @@
 $(document).ready(function() {
     //declare the presignedUrlvariable
     let presignedUrl;
-    const loadingOverlay = document.getElementById("loading-overlay");
+    const loadingOverlay = $("#loading-overlay");
     // get the id="submit-button" element
-    const submitButton = document.getElementById("submit-button");
+    const submitButton = $("#submit-button");
     // Function to show the loading overlay
     function showLoadingOverlay() {
-        loadingOverlay.style.display = "block";
+        loadingOverlay.show();
     }
 
     // Function to hide the loading overlay
     function hideLoadingOverlay() {
-        loadingOverlay.style.display = "none";
+        loadingOverlay.hide();
+    }
+    // a function that takes an s3 signed url as a parameter and uses it to upload a file. 
+    function uploadFile(signedUrl="https://some.s3.amazonaws.com/") {
+        // get the file from the input
+        const file = $("#image-upload")[0].files[0];
+        // make a request to the signed url
+        $.ajax({
+            url: signedUrl,
+            type: 'PUT',
+            data: file,
+            processData: false,
+            contentType: false
+        });
     }
     hideLoadingOverlay();
     // Call the showLoadingOverlay function when you want to display the overlay
@@ -55,7 +68,8 @@ $(document).ready(function() {
     function submit_button_function(id_token){
         // show the loading overlay
         showLoadingOverlay();
-        console.log("finished loading")
+        // upload the file to the presigned url using uploadFile
+        uploadFile(presignedUrl);
         // create a header Authorization with the id_token
         headers= {
              'Authorization': 'Bearer '+id_token
@@ -97,7 +111,6 @@ $(document).ready(function() {
                 presignedUrl = response;
             });
         });
-        // Amazon Cognito login functionality
         submitButton.click(function() {
             loadCredentials().then(id_token => {
                 // do a post with the credentials to the api
@@ -109,20 +122,7 @@ $(document).ready(function() {
     }
     
     
-    //const signed="https://deepracer-destination.s3.amazonaws.com/"
-    // a function that takes an s3 signed url as a parameter and uses it to upload a file. 
-    function uploadFile(signedUrl="https://deepracer-destination.s3.amazonaws.com/") {
-        // get the file from the input
-        const file = $("#fileUpload")[0].files[0];
-        // make a request to the signed url
-        $.ajax({
-            url: signedUrl,
-            type: 'PUT',
-            data: file,
-            processData: false,
-            contentType: false
-        });
-    }
+    
     
     
     
