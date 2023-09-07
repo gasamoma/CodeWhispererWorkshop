@@ -26,8 +26,8 @@ Once the virtualenv is activated, you can install the required dependencies.
 $ pip install -r requirements.txt
 ```
 
-<h1 align="center">PLACEHOLDER</h1>
-<h3 align="center">PLACEHOLDER</h3>
+<h1 align="center">ALIENNATION</h1>
+<h3 align="center">Front End</h3>
 
 ## Tabla de Contenido
 
