@@ -3,10 +3,12 @@ import boto3
 import os
 import uuid
 import json
-
+from botocore.config import Config
 
 def handler(event, context):
-    s3 = boto3.client('s3')
+
+    config = Config(signature_version='s3v4')
+    s3 = boto3.client('s3', config=config)
     # get the user email from the event cognito
     user_email = event['requestContext']['authorizer']['claims']['email']
     # create the path for the user folder

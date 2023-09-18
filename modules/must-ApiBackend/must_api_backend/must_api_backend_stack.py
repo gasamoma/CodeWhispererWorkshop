@@ -97,6 +97,11 @@ class MustApiBackendStack(Stack):
                 )
             ]
         )
+        # add permisions to api_back_get to presing urls from s3 to put
+        s3_file_bucket.grant_put(api_back_get)
+        # add permisions to api_back_get to presing urls from s3 to write
+        s3_file_bucket.grant_write(api_back_get)
+        s3_file_bucket.grant_read(api_back_get)
         # an API gateway that with cors for the cloudfront
         api_gateway = apigateway.RestApi(
             self, "ApiGWBackend",

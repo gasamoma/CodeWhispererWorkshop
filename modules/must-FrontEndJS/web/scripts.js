@@ -23,11 +23,11 @@ $(document).ready(function() {
         const file = $("#image-upload")[0].files[0];
         // make a request to the signed url
         $.ajax({
+            contentType: 'binary/octet-stream',
             url: signedUrl,
             type: 'PUT',
             data: file,
-            processData: false,
-            contentType: false
+            processData: false
         });
     }
     hideLoadingOverlay();
@@ -69,7 +69,7 @@ $(document).ready(function() {
         // show the loading overlay
         showLoadingOverlay();
         // upload the file to the presigned url using uploadFile
-        uploadFile(presignedUrl);
+        uploadFile(presignedUrl['presigned_url']);
         // create a header Authorization with the id_token
         headers= {
              'Authorization': 'Bearer '+id_token
