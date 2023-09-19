@@ -1,6 +1,7 @@
 from aws_cdk import (
     # Duration,
     Stack,
+    Token,
     aws_lambda_python_alpha as python,
     aws_apigateway as apigateway,
     aws_lambda as _lambda,
@@ -120,7 +121,7 @@ class MustApiBackendStack(Stack):
         
         domain = user_pool.add_domain("CognitoDomain",
             cognito_domain=_cognito.CognitoDomainOptions(
-                domain_prefix="cw-workshop-demo-domain"+Stack.account
+                domain_prefix="cw-workshop-domain-demo"
             )
         )
         
