@@ -40,9 +40,6 @@ Actions:
       Name: workshop
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
-      # Optional
-      Sources:
-        - WorkflowSource # This specifies that the action requires this Workflow as a source
       Artifacts:
         - mustCognitoSecurityArtifact
     Compute:
