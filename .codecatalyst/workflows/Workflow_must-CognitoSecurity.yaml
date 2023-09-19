@@ -70,7 +70,7 @@ Actions:
       Artifacts:
         - Name: must_CognitoSecurity
           Files:
-            - modules/must-CognitoSecurity/*
+            - "**/*"
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
