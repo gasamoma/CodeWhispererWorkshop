@@ -24,7 +24,7 @@ class MustApiBackendStack(Stack):
         post_auth_exists = "0"
         # get the CW-workshop-post-autentication-dynamo ssm parameter
         try:
-            post_autentication_dynamo_table_name = ssm.StringParameter.value_from_lookup(self, "CW-workshop-post-autentication-dynamo")
+            post_autentication_dynamo_table_name = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-dynamo")
         except:
             post_autentication_dynamo_table_name = "CW-workshop-post-autentication-dynamo"
             pass;
@@ -127,7 +127,7 @@ class MustApiBackendStack(Stack):
         
         
         try:
-            redirect_uri = ssm.StringParameter.value_from_lookup(self, "CW-workshop-redirect_uri")
+            redirect_uri = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-redirect_uri")
         except:
             redirect_uri = "https://www.amazon.com/"
             pass;
@@ -179,7 +179,7 @@ class MustApiBackendStack(Stack):
         
         # get the ssm parameter for CW-workshop-post-autentication-lambda
         try:
-            post_autentication_lambda_arn = ssm.StringParameter.value_from_lookup(self, "CW-workshop-post-autentication-lambda")
+            post_autentication_lambda_arn = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-lambda")
         except:
             # a "arn:" and have at least 6 components
             post_autentication_lambda_arn = "arn:aws:lambda:us-east-1:776590830345:function:MustCognitoSecurityStack-CognitoPostAuthTrigger501-C26V35ZeD2tq"
