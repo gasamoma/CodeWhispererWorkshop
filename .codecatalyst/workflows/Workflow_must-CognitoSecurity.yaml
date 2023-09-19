@@ -77,8 +77,8 @@ Actions:
       Steps:
         - Run: cd modules/must-CognitoSecurity/
         - Run: pip install -r requirements.txt
-        - Run: chmod +x ./bedrock_lib.sh
-        - Run: ./bedrock_lib.sh
+        - Run: chmod +x ./layer_lib.sh
+        - Run: ./layer_lib.sh
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
