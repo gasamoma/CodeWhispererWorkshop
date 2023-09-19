@@ -84,6 +84,7 @@ Actions:
     Configuration:
       StackName: MustCognitoSecurityStack
       Region: us-east-1
+      CdkRootPath: modules/must-CognitoSecurity/
     DependsOn:
       - AWSCDKBootstrap_MustCognitoSecurityStack
   AWSCDKDeploy_MustApiBackendStack:
@@ -104,6 +105,7 @@ Actions:
     Configuration:
       StackName: MustApiBackendStack
       Region: us-east-1
+      CdkRootPath: modules/must-ApiBackend/
     DependsOn:
       - AWSCDKBootstrap_MustApiBackendStack
   AWSCDKDeploy_MustFrontEndJsStack:
@@ -124,6 +126,7 @@ Actions:
     Configuration:
       StackName: MustFrontEndJsStack
       Region: us-east-1
+      CdkRootPath: modules/must-FrontEndJs/
     DependsOn:
       - AWSCDKBootstrap_MustFrontEndJsStack
   Build_MustCognitoSecurityStack:
@@ -154,7 +157,7 @@ Actions:
       Artifacts:
         - Name: MustCognitoSecurityStackArtifact
           Files:
-            - "modules/must-CognitoSecurity/*"
+            - "modules/must-CognitoSecurity/**"
   Build_MustApiBackendStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
@@ -183,7 +186,7 @@ Actions:
       Artifacts:
         - Name: MustApiBackendStackArtifact
           Files:
-            - "modules/must-ApiBackend/*"
+            - "modules/must-ApiBackend/**"
   Build_MustFrontEndJsStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
@@ -212,4 +215,4 @@ Actions:
       Artifacts:
         - Name: MustFrontEndJsStackArtifact
           Files:
-            - "modules/must-FrontEndJS/*"
+            - "modules/must-FrontEndJS/**"
