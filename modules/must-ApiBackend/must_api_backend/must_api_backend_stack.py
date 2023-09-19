@@ -22,7 +22,11 @@ class MustApiBackendStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
         post_auth_exists = "0"
         # get the CW-workshop-post-autentication-dynamo ssm parameter
-        post_autentication_dynamo_table_name = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-dynamo")
+        try:
+            post_autentication_dynamo_table_name = ssm.StringParameter.value_from_lookup(self, "CW-workshop-post-autentication-dynamo")
+        except:
+            post_autentication_dynamo_table_name = "CW-workshop-post-autentication-dynamo"
+            pass;
         
         try:
             test_post_autentication_lambda_arn = Fn.import_value("CW-test-workshop-post-autentication-lambda")
@@ -121,7 +125,11 @@ class MustApiBackendStack(Stack):
         )
         
         
-        redirect_uri = Fn.import_value("RedirectUri")
+        try:
+            redirect_uri = ssm.StringParameter.value_from_lookup(self, "CW-workshop-redirect_uri")
+        except:
+            redirect_uri = "https://www.amazon.com/"
+            pass;
         # a cognito client with callback to the cloudfront_website
         client = user_pool.add_client("app-client",
             o_auth=_cognito.OAuthSettings(
@@ -169,7 +177,12 @@ class MustApiBackendStack(Stack):
         #     stage_name="prod")
         
         # get the ssm parameter for CW-workshop-post-autentication-lambda
-        post_autentication_lambda_arn = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-lambda")
+        try:
+            post_autentication_lambda_arn = ssm.StringParameter.value_from_lookup(self, "CW-workshop-post-autentication-lambda")
+        except:
+            # a "arn:" and have at least 6 components
+            post_autentication_lambda_arn = "arn:aws:lambda:us-east-1:776590830345:function:MustCognitoSecurityStack-CognitoPostAuthTrigger501-C26V35ZeD2tq"
+            pass;
         # reference the post_autentication_lambda
         post_autentication_lambda = _lambda.Function.from_function_arn(self, "post_autentication_lambda_ref", post_autentication_lambda_arn)
         user_pool.add_trigger(_cognito.UserPoolOperation.POST_AUTHENTICATION, post_autentication_lambda)

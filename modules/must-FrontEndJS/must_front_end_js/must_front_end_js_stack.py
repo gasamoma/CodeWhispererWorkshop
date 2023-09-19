@@ -43,10 +43,7 @@ class MustFrontEndJsStack(Stack):
                     s3_website_bucket,
                     origin_access_identity=oin)))
         
-        
-        CfnOutput(self, "user_pool_login_url", value=user_pool_login_url)
         redirect_uri="https://"+cloudfront_website.distribution_domain_name+"/index.html"
-        CfnOutput(self, "RedirectUri", value=redirect_uri, export_name="RedirectUri")
-        ssm.StringParameter(self, "redirect_uri",
-            parameter_name="redirect_uri",
+        ssm.StringParameter(self, "CW-workshop-redirect_uri",
+            parameter_name="CW-workshop-redirect_uri",
             string_value=redirect_uri)
