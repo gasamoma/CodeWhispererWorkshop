@@ -29,7 +29,7 @@ Actions:
       Region: us-east-1
     DependsOn:
       - Build_c5
-  AWSCDKDeploy_8f:
+  AWSCDKDeploy_MustCognitoSecurityStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cdk-deploy@v1.0.12
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
@@ -41,16 +41,55 @@ Actions:
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
       Artifacts:
-        - mustCognitoSecurityArtifact
+        - MustCognitoSecurityStackArtifact
     Compute:
       Type: EC2
     Configuration:
       StackName: MustCognitoSecurityStack
-      CdkRootPath: modules/must-CognitoSecurity/
       Region: us-east-1
     DependsOn:
       - AWSCDKBootstrap_c3
-  Build_c5:
+  AWSCDKDeploy_MustApiBackendStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-deploy@v1.0.12
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustApiBackendStackArtifact
+    Compute:
+      Type: EC2
+    Configuration:
+      StackName: MustApiBackendStack
+      Region: us-east-1
+    DependsOn:
+      - AWSCDKBootstrap_c3
+  AWSCDKDeploy_MustFrontEndJsStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-deploy@v1.0.12
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustFrontEndJsStackArtifact
+    Compute:
+      Type: EC2
+    Configuration:
+      StackName: MustFrontEndJsStack
+      Region: us-east-1
+    DependsOn:
+      - AWSCDKBootstrap_c3
+  Build_MustCognitoSecurityStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
     # Specifies the source and/or artifacts to pass to the action as input.
@@ -76,6 +115,64 @@ Actions:
       Name: workshop
     Outputs:
       Artifacts:
-        - Name: mustCognitoSecurityArtifact
+        - Name: MustCognitoSecurityStackArtifact
           Files:
-            - "**/*"
+            - "modules/must-CognitoSecurity/*"
+  Build_MustApiBackendStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: cd modules/must-ApiBackend/
+        - Run: pip install -r requirements.txt
+        - Run: chmod +x ./layer_lib.sh
+        - Run: ./layer_lib.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    Outputs:
+      Artifacts:
+        - Name: MustApiBackendStackArtifact
+          Files:
+            - "modules/must-ApiBackend/*"
+  Build_MustFrontEndJsStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: cd modules/must-FrontEndJS/
+        - Run: pip install -r requirements.txt
+        - Run: chmod +x ./layer_lib.sh
+        - Run: ./layer_lib.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    Outputs:
+      Artifacts:
+        - Name: MustFrontEndJsStackArtifact
+          Files:
+            - "modules/must-FrontEndJS/*"
