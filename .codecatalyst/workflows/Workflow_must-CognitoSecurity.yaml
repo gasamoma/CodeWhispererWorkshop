@@ -43,9 +43,10 @@ Actions:
       # Optional
       Sources:
         - WorkflowSource # This specifies that the action requires this Workflow as a source
+      Artifacts:
+        - must_CognitoSecurity
     Compute:
       Type: EC2
-      Fleet: Linux.x86-64.Large
     Configuration:
       StackName: must-CognitoSecurity
       CdkRootPath: modules/must-CognitoSecurity/
