@@ -126,7 +126,7 @@ Actions:
     Configuration:
       StackName: MustFrontEndJsStack
       Region: us-east-1
-      CdkRootPath: modules/must-FrontEndJs/
+      CdkRootPath: modules/must-FrontEndJS/
     DependsOn:
       - AWSCDKBootstrap_MustFrontEndJsStack
   Build_MustCognitoSecurityStack:
