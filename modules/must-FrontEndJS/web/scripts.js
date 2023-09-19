@@ -60,7 +60,7 @@ $(document).ready(function() {
             'Authorization': 'Bearer ' + id_token
         }
         // do a get request to this endpoint /get_presigned_url
-        return get('https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend', headers).then(response => {
+        return get('https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend', headers).then(response => {
             // and return the presigned url
             return response;
         });
@@ -77,7 +77,7 @@ $(document).ready(function() {
         // get the object key from the presignedUrl['presigned_url']
         const objectKey = presignedUrl['presigned_url'].split('?')[0].split('/').pop();
         // do a post request to this endpoint /get_user_files
-        post('https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend',{'key':objectKey}, headers).then(response => {
+        post('https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend',{'key':objectKey}, headers).then(response => {
 
             // and get the list of files from the response
             const files = response;
@@ -97,7 +97,7 @@ $(document).ready(function() {
             const id_token = window.location.hash.match(/id_token=([^&]+)/);
             // check if id_token has [1] index
             if(typeof id_token[1] === 'undefined') {
-                reject("https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html");
+                reject("https://cw-workshop-domain-demo.auth.us-east-1.amazoncognito.com/login?client_id=597e5f4rfac3sprtrd943h8jdg&response_type=token&redirect_uri=https://d2mj6f7u00o6eq.cloudfront.net/index.html");
             }
             // otherwise, resolve with the id_token
             resolve(id_token[1]);
@@ -120,7 +120,7 @@ $(document).ready(function() {
             });
         });
     }else {
-        window.location.href = "https://cw-workshop-demo-domain.auth.us-east-1.amazoncognito.com/login?client_id=2qkldhuvbk4ibcjg7q4dcdcde&response_type=token&redirect_uri=https://d2kbjcta2fltwo.cloudfront.net/index.html"
+        window.location.href = "https://cw-workshop-domain-demo.auth.us-east-1.amazoncognito.com/login?client_id=597e5f4rfac3sprtrd943h8jdg&response_type=token&redirect_uri=https://d2mj6f7u00o6eq.cloudfront.net/index.html"
     }
     
     
