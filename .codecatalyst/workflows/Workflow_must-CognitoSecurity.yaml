@@ -75,3 +75,8 @@ Actions:
         - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
           Name: "776590830345"
       Name: workshop
+    Outputs:
+      Artifacts:
+        - Name: mustCognitoSecurityArtifact
+          Files:
+            - "**/*"
