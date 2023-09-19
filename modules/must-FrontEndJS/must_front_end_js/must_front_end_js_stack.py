@@ -20,8 +20,12 @@ class MustFrontEndJsStack(Stack):
         s3_website_bucket = s3.Bucket(
             self, "CW-worshop-WebsiteBucket"
             )
-        user_pool_login_url = ssm.StringParameter.value_for_string_parameter(self, "user_pool_login_url")
-        
+        try:
+            user_pool_login_url = ssm.StringParameter.value_for_string_parameter(self, "user_pool_login_url")
+        except:
+            # a "arn:" and have at least 6 components
+            user_pool_login_url = "https://www.amazon.com/"
+            pass;
         s3deploy.BucketDeployment(self, "DeployWebsite",
             sources=[s3deploy.Source.asset("./web/")],
             destination_bucket=s3_website_bucket
@@ -47,3 +51,5 @@ class MustFrontEndJsStack(Stack):
         ssm.StringParameter(self, "CW-workshop-redirect_uri",
             parameter_name="CW-workshop-redirect_uri",
             string_value=redirect_uri)
+        
+        CfnOutput(self, "UserPoolLoginUrl", value=user_pool_login_url)
