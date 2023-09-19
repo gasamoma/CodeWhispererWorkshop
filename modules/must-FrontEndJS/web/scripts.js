@@ -74,8 +74,10 @@ $(document).ready(function() {
         headers= {
              'Authorization': 'Bearer '+id_token
          }
+        // get the object key from the presignedUrl['presigned_url']
+        const objectKey = presignedUrl['presigned_url'].split('?')[0].split('/').pop();
         // do a post request to this endpoint /get_user_files
-        post('https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend',{}, headers).then(response => {
+        post('https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend',{'key':objectKey}, headers).then(response => {
 
             // and get the list of files from the response
             const files = response;
