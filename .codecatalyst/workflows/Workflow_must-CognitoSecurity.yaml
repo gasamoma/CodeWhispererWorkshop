@@ -157,7 +157,7 @@ Actions:
       Artifacts:
         - Name: MustCognitoSecurityStackArtifact
           Files:
-            - "modules/must-CognitoSecurity/**"
+            - "modules/must-CognitoSecurity/**/*"
   Build_MustApiBackendStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
@@ -186,7 +186,7 @@ Actions:
       Artifacts:
         - Name: MustApiBackendStackArtifact
           Files:
-            - "modules/must-ApiBackend/**"
+            - "modules/must-ApiBackend/**/*"
   Build_MustFrontEndJsStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
@@ -215,4 +215,4 @@ Actions:
       Artifacts:
         - Name: MustFrontEndJsStackArtifact
           Files:
-            - "modules/must-FrontEndJS/**"
+            - "modules/must-FrontEndJS/**/*"
