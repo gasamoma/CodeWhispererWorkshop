@@ -51,3 +51,37 @@ Actions:
       Region: us-east-1
     DependsOn:
       - AWSCDKBootstrap_c3
+  Build_c5:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    Outputs:
+      # Optional; Automatically discover reports for popular test frameworks
+      AutoDiscoverReports:
+        Enabled: true
+        # Use as prefix for the report files
+        ReportNamePrefix: rpt
+      Artifacts:
+        - Name: must_CognitoSecurity
+          Files:
+            - modules/must-CognitoSecurity/*
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: cd modules/must-CognitoSecurity/
+        - Run: pip install -r requirements.txt
+        - Run: chmod +x ./bedrock_lib.sh
+        - Run: ./bedrock_lib.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
