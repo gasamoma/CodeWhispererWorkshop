@@ -9,7 +9,7 @@ Triggers:
 
 # Required - Define action configurations.
 Actions:
-  AWSCDKBootstrap_c3:
+  AWSCDKBootstrap_MustCognitoSecurityStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cdk-bootstrap@v1.0.7
     # Required; You can use an environment, AWS account connection, and role to access AWS resources.
@@ -20,15 +20,52 @@ Actions:
       Name: workshop
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
-      # Optional
-      Sources:
-        - WorkflowSource # This specifies that the action requires this Workflow as a source
+      Artifacts:
+        - MustCognitoSecurityStackArtifact
     Compute:
       Type: Lambda
     Configuration:
       Region: us-east-1
     DependsOn:
-      - Build_c5
+      - Build_MustCognitoSecurityStack
+  AWSCDKBootstrap_MustApiBackendStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-bootstrap@v1.0.7
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustApiBackendStackArtifact
+    Compute:
+      Type: Lambda
+    Configuration:
+      Region: us-east-1
+    DependsOn:
+      - Build_MustApiBackendStack
+  AWSCDKBootstrap_MustFrontEndJsStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-bootstrap@v1.0.7
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustFrontEndJsStackArtifact
+    Compute:
+      Type: Lambda
+    Configuration:
+      Region: us-east-1
+    DependsOn:
+      - Build_MustFrontEndJsStack
   AWSCDKDeploy_MustCognitoSecurityStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cdk-deploy@v1.0.12
@@ -48,7 +85,7 @@ Actions:
       StackName: MustCognitoSecurityStack
       Region: us-east-1
     DependsOn:
-      - AWSCDKBootstrap_c3
+      - AWSCDKBootstrap_MustCognitoSecurityStack
   AWSCDKDeploy_MustApiBackendStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cdk-deploy@v1.0.12
@@ -68,7 +105,7 @@ Actions:
       StackName: MustApiBackendStack
       Region: us-east-1
     DependsOn:
-      - AWSCDKBootstrap_c3
+      - AWSCDKBootstrap_MustApiBackendStack
   AWSCDKDeploy_MustFrontEndJsStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cdk-deploy@v1.0.12
@@ -88,7 +125,7 @@ Actions:
       StackName: MustFrontEndJsStack
       Region: us-east-1
     DependsOn:
-      - AWSCDKBootstrap_c3
+      - AWSCDKBootstrap_MustFrontEndJsStack
   Build_MustCognitoSecurityStack:
     # Identifies the action. Do not modify this value.
     Identifier: aws/build@v1.0.0
