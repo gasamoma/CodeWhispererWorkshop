@@ -45,7 +45,7 @@ Actions:
     Compute:
       Type: EC2
     Configuration:
-      StackName: must-CognitoSecurity
+      StackName: MustCognitoSecurityStack
       CdkRootPath: modules/must-CognitoSecurity/
       Region: us-east-1
     DependsOn:
