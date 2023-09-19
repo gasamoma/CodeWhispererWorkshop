@@ -120,7 +120,7 @@ class MustApiBackendStack(Stack):
         
         domain = user_pool.add_domain("CognitoDomain",
             cognito_domain=_cognito.CognitoDomainOptions(
-                domain_prefix="cw-workshop-demo-domain"
+                domain_prefix="cw-workshop-demo-domain"+Stack.account
             )
         )
         
