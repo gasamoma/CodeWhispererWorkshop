@@ -25,9 +25,10 @@ Actions:
         - WorkflowSource # This specifies that the action requires this Workflow as a source
     Compute:
       Type: Lambda
-      Fleet: Linux.x86-64.Large # Defines the action's properties.
     Configuration:
       Region: us-east-1
+    DependsOn:
+      - Build_c5
   AWSCDKDeploy_8f:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cdk-deploy@v1.0.12
