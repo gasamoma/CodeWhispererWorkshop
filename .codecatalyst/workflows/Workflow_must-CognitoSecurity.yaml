@@ -25,9 +25,10 @@ Actions:
         - WorkflowSource # This specifies that the action requires this Workflow as a source
     Compute:
       Type: Lambda
-      Fleet: Linux.x86-64.Large # Defines the action's properties.
     Configuration:
       Region: us-east-1
+    DependsOn:
+      - Build_c5
   AWSCDKDeploy_8f:
     # Identifies the action. Do not modify this value.
     Identifier: aws/cdk-deploy@v1.0.12
@@ -39,15 +40,42 @@ Actions:
       Name: workshop
     # Specifies the source and/or artifacts to pass to the action as input.
     Inputs:
-      # Optional
-      Sources:
-        - WorkflowSource # This specifies that the action requires this Workflow as a source
+      Artifacts:
+        - mustCognitoSecurityArtifact
     Compute:
       Type: EC2
-      Fleet: Linux.x86-64.Large
     Configuration:
-      StackName: must-CognitoSecurity
+      StackName: MustCognitoSecurityStack
       CdkRootPath: modules/must-CognitoSecurity/
       Region: us-east-1
     DependsOn:
       - AWSCDKBootstrap_c3
+  Build_c5:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: cd modules/must-CognitoSecurity/
+        - Run: pip install -r requirements.txt
+        - Run: chmod +x ./layer_lib.sh
+        - Run: ./layer_lib.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    Outputs:
+      Artifacts:
+        - Name: mustCognitoSecurityArtifact
+          Files:
+            - "**/*"
