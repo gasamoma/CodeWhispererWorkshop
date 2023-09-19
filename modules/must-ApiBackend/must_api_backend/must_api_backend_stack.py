@@ -64,6 +64,15 @@ class MustApiBackendStack(Stack):
             block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
             encryption=s3.BucketEncryption.KMS_MANAGED
             )
+        # add cors to the put method from everywhere
+        s3_file_bucket.add_cors_rule(
+            allowed_methods=[s3.HttpMethods.PUT],
+            allowed_origins=["*"],
+            allowed_headers=["*"],
+            expose_headers=["*"],
+            max_age=Duration.seconds(300)
+            )
+        
         # a lambda function called api_backend
         api_backend = python.PythonFunction(self, "ApiBackend",
             entry="app/lambda",
