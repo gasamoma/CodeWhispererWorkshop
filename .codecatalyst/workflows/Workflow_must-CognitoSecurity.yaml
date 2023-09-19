@@ -47,7 +47,7 @@ Actions:
       Fleet: Linux.x86-64.Large # Defines the action's properties.
     Configuration:
       StackName: must-CognitoSecurity
-      CdkRootPath: modules/must-CognitoSecurity/cdk.json
+      CdkRootPath: modules/must-CognitoSecurity/
       Region: us-east-1
     DependsOn:
       - AWSCDKBootstrap_c3
