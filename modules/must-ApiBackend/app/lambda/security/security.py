@@ -1,6 +1,7 @@
 import os
 import boto3
 import time
+from boto3.dynamodb.conditions import Key
 
 #check if POST_AUTH is "1" or from the environ
 if os.environ.get("POST_AUTH",None) == "1":
@@ -21,17 +22,12 @@ def check_auth(event):
         table = dynamodb.Table(table_name)
         # get the user email from the cognito in the event
         user_email = event['requestContext']['authorizer']['claims']['email']
+        # table schema Partition key: user-email (String); Sort key: date (String)
         # query table with the user email and geater than the current timestamp
         response = table.query(
-            KeyConditionExpression='user-email = :email and #date > :timestamp',
-            ExpressionAttributeNames={'#date': 'date'},
-            ExpressionAttributeValues={
-                ':email': user_email,
-                ':timestamp': int(time.time())
-                })
+            KeyConditionExpression=Key('user-email').eq(user_email) & Key('date').gt(str(time.time()-3600)),
+            )
         print(response)
-        # if query reults are empty
-        if not response:
         if not response:
             return False
         # if the response is not empty

@@ -90,11 +90,8 @@ class MustApiBackendStack(Stack):
                 )
             ]
         )
-        # add permisions to api_backend to read s3_file_bucket
-        api_backend.add_to_role_policy(iam.PolicyStatement(
-            actions=["s3:GetObject"],
-            resources=[s3_file_bucket.bucket_arn + "/*"]
-            ))
+        # add permisions to api_backend AmazonS3ReadOnlyAccess
+        s3_file_bucket.grant_read(api_backend)
         # add alpermisions to api_backend to lsi s3_file_bucket
         api_backend.add_to_role_policy(iam.PolicyStatement(
             actions=["s3:ListBucket"],
@@ -104,12 +101,12 @@ class MustApiBackendStack(Stack):
         post_autentication_dynamo_table_arn = "arn:aws:dynamodb:" + self.region + ":" + self.account + ":table/" + post_autentication_dynamo_table_name
         # add permisions to access the dynamo db table
         api_backend.add_to_role_policy(iam.PolicyStatement(
-            actions=["dynamodb:GetItem", "dynamodb:PutItem"],
+            actions=["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:Scan", "dynamodb:Query", "dynamodb:UpdateItem", "dynamodb:DeleteItem"],
             resources=[ post_autentication_dynamo_table_arn ]
             ))
-        # add permisions to api_backend to rekognition detect faces
+        # add permisions to api_backend to rekognition full access
         api_backend.add_to_role_policy(iam.PolicyStatement(
-            actions=["rekognition:DetectFaces"],
+            actions=["rekognition:*"],
             resources=["*"]
             ))
         # a lambda function called api_backend
@@ -134,6 +131,9 @@ class MustApiBackendStack(Stack):
         # add permisions to api_back_get to presing urls from s3 to write
         s3_file_bucket.grant_write(api_back_get)
         s3_file_bucket.grant_read(api_back_get)
+        # add permisions to rekognition service to read from s3_file_bucket
+
+        
         # an API gateway that with cors for the cloudfront
         api_gateway = apigateway.RestApi(
             self, "ApiGWBackend",

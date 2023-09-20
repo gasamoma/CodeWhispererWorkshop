@@ -15,15 +15,18 @@ logger = logging.getLogger(__name__)
 min_confidence = int(environ.get('CONFIDENCE', 70))
 # a lambda handler for the api gateway post
 def handler(event, context):
-    # the event is a api gateway proxy event
-    # get the bucket and key from the event
-    
+    ## SECURITY CHECK
     security.check_auth(event)
+    # get the body of the request
     body =  event['body']
     body = json.loads(body)
     key = body['key']
     bucket = environ['BUCKET']
-    uidd = body['uidd']
+    # get the user email from cognito
+    user_email = event['requestContext']['authorizer']['claims']['email']
+    # create the user path in s3 using the email
+    key = "cognito/"+user_email+"/"+key
+    print("bucket", bucket, "key", key)
     # call the detect_faces function
     response = detect_faces(bucket, key)
     # get the eyes_open and mouth_open attributes
