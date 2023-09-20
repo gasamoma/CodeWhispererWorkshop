@@ -10,7 +10,7 @@ def handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
     #get the user-email fron the cognito event
-    user_email = event['request']['userAttributes']['email']
+    ['email']user_email = event['request']['userAttributes']
     
     # write the user-email to the table with the range key of the current timestamp
     table.put_item(
