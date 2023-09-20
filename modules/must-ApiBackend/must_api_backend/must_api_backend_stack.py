@@ -90,6 +90,16 @@ class MustApiBackendStack(Stack):
                 )
             ]
         )
+        # add permisions to api_backend to read s3_file_bucket
+        api_backend.add_to_role_policy(iam.PolicyStatement(
+            actions=["s3:GetObject"],
+            resources=[s3_file_bucket.bucket_arn + "/*"]
+            ))
+        # add alpermisions to api_backend to lsi s3_file_bucket
+        api_backend.add_to_role_policy(iam.PolicyStatement(
+            actions=["s3:ListBucket"],
+            resources=[s3_file_bucket.bucket_arn]
+            ))
         # a lambda function called api_backend
         api_back_get = python.PythonFunction(self, "ApiBackendGet",
             entry="app/lambda",
