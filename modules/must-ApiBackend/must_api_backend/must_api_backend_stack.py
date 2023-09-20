@@ -126,7 +126,7 @@ class MustApiBackendStack(Stack):
         
         domain = user_pool.add_domain("CognitoDomain",
             cognito_domain=_cognito.CognitoDomainOptions(
-                domain_prefix="cw-workshop-domain-demo"
+                domain_prefix="cw-workshop-demo-domain"
             )
         )
         
@@ -192,14 +192,10 @@ class MustApiBackendStack(Stack):
         # reference the post_autentication_lambda
         post_autentication_lambda = _lambda.Function.from_function_arn(self, "post_autentication_lambda_ref", post_autentication_lambda_arn)
         user_pool.add_trigger(_cognito.UserPoolOperation.POST_AUTHENTICATION, post_autentication_lambda)
-        # create a resurce based polocy for the post_autentication_lambda allows cognito service to invoke it
-        post_autentication_lambda.add_permission("post_autentication_lambda_permission",
-            source_arn=post_autentication_lambda_arn,
-            principal=iam.ServicePrincipal("cognito-idp.amazonaws.com"))
-        
+        # get cognito principal
+        cognito_principal = iam.ServicePrincipal("cognito-idp.amazonaws.com")
+        post_autentication_lambda.grant_invoke(cognito_principal)
             
-        
-        
         ssm.StringParameter(self, "user_pool_login_url",
             parameter_name="user_pool_login_url",
             string_value=sign_in_url)
