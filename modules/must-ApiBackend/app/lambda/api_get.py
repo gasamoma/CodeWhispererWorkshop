@@ -16,17 +16,17 @@ def handler(event, context):
     # add a uuid to the file .jpg
     path += f"/{str(uuid.uuid4())}.jpg"
     # prepresign the url to path
-    #presigned_url = s3.generate_presigned_url(
-    #    'put_object', 
-    #    Params={'Bucket': os.environ['BUCKET'], 'Key': path}, 
-    #    ExpiresIn=3600)
+    presigned_url = s3.generate_presigned_url(
+        'put_object', 
+        Params={'Bucket': os.environ['BUCKET'], 'Key': path}, 
+        ExpiresIn=3600)
     
     #presign the url using boto generate_presigned_post.
     #this is a more secure way to do it.
-    presigned_url = s3.generate_presigned_post( 
-        Bucket=os.environ['BUCKET'],
-        Key=path,
-        ExpiresIn=3600)
+    # presigned_url = s3.generate_presigned_post( 
+    #     Bucket=os.environ['BUCKET'],
+    #     Key=path,
+    #     ExpiresIn=3600)
         
     return {
         'headers': {

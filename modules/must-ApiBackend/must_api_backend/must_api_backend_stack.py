@@ -64,14 +64,16 @@ class MustApiBackendStack(Stack):
             block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
             encryption=s3.BucketEncryption.KMS_MANAGED
             )
-        # add cors to the put method from everywhere
-        s3_file_bucket.add_cors_rule(
+        # an s3 cors rule
+        cors_rule = s3.CorsRule(
+            allowed_origins=['*'],
             allowed_methods=[s3.HttpMethods.PUT],
-            allowed_origins=["*"],
-            allowed_headers=["*"],
-            expose_headers=["*"],
-            max_age=Duration.seconds(300)
-            )
+            allowed_headers=['*'],
+            max_age=3000
+        )
+        # add cors to the put method from everywhere
+        s3_file_bucket.add_cors_rule(allowed_origins=['*'],
+            allowed_methods=[s3.HttpMethods.PUT])
         
         # a lambda function called api_backend
         api_backend = python.PythonFunction(self, "ApiBackend",
@@ -130,7 +132,7 @@ class MustApiBackendStack(Stack):
         
         domain = user_pool.add_domain("CognitoDomain",
             cognito_domain=_cognito.CognitoDomainOptions(
-                domain_prefix="cw-workshop-domain-demo"
+                domain_prefix="cw-workshop-demo-domain"
             )
         )
         
