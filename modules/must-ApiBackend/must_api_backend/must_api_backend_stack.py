@@ -189,8 +189,11 @@ class MustApiBackendStack(Stack):
             # a "arn:" and have at least 6 components
             post_autentication_lambda_arn = "arn:aws:lambda:us-east-1:776590830345:function:MustCognitoSecurityStack-CognitoPostAuthTrigger501-C26V35ZeD2tq"
             pass;
-        # reference the post_autentication_lambda
-        post_autentication_lambda = _lambda.Function.from_function_arn(self, "post_autentication_lambda_ref", post_autentication_lambda_arn)
+        # reference the post_autentication_lambda from_function_attributes
+        post_autentication_lambda = _lambda.Function.from_function_attributes(self, "post_autentication_lambda_ref", 
+            function_arn=post_autentication_lambda_arn,
+            same_environment=True,
+        )
         user_pool.add_trigger(_cognito.UserPoolOperation.POST_AUTHENTICATION, post_autentication_lambda)
         # get cognito principal
         cognito_principal = iam.ServicePrincipal("cognito-idp.amazonaws.com")
