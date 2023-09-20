@@ -12,7 +12,7 @@ def handler(event, context):
     # get the user email from the event cognito
     user_email = event['requestContext']['authorizer']['claims']['email']
     # create the path for the user folder
-    path = f"conito/{user_email}"
+    path = f"cognito/{user_email}"
     # add a uuid to the file .jpg
     path += f"/{str(uuid.uuid4())}.jpg"
     # prepresign the url to path
