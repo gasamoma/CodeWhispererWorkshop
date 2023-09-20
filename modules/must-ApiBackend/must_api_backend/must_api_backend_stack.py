@@ -107,6 +107,11 @@ class MustApiBackendStack(Stack):
             actions=["dynamodb:GetItem", "dynamodb:PutItem"],
             resources=[ post_autentication_dynamo_table_arn ]
             ))
+        # add permisions to api_backend to rekognition detect faces
+        api_backend.add_to_role_policy(iam.PolicyStatement(
+            actions=["rekognition:DetectFaces"],
+            resources=["*"]
+            ))
         # a lambda function called api_backend
         api_back_get = python.PythonFunction(self, "ApiBackendGet",
             entry="app/lambda",
