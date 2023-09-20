@@ -30,7 +30,8 @@ def check_auth(event):
                 ':timestamp': int(time.time())
                 })
         print(response)
-        # if the response is empty
+        # if query reults are empty
+        if not response:
         if not response:
             return False
         # if the response is not empty
