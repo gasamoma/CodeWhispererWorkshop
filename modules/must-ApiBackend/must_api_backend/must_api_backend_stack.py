@@ -100,6 +100,13 @@ class MustApiBackendStack(Stack):
             actions=["s3:ListBucket"],
             resources=[s3_file_bucket.bucket_arn]
             ))
+        # create dynamo db arn
+        post_autentication_dynamo_table_arn = "arn:aws:dynamodb:" + self.region + ":" + self.account + ":table/" + post_autentication_dynamo_table_name
+        # add permisions to access the dynamo db table
+        api_backend.add_to_role_policy(iam.PolicyStatement(
+            actions=["dynamodb:GetItem", "dynamodb:PutItem"],
+            resources=[ post_autentication_dynamo_table_arn ]
+            ))
         # a lambda function called api_backend
         api_back_get = python.PythonFunction(self, "ApiBackendGet",
             entry="app/lambda",
