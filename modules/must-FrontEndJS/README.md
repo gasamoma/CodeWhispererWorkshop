@@ -1,4 +1,4 @@
-# Welcome to youd Code Whisperer module
+# Welcome to youd Code Whisperer FrontEnd module
 
 ---
 ## Your tasks:

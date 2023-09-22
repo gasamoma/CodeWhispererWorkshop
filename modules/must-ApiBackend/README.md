@@ -1,51 +1,67 @@
-# CodeWhispererWorkshop
+# Welcome to youd Code Whisperer module Api Backend
 
-<h1 align="center">PLACEHOLDER</h1>
-<h3 align="center">PLACEHOLDER</h3>
+---
+## Your tasks:
 
-## Tabla de Contenido
+### File app/lambda/api.py
+handler(event, context)
+#### Input
 
-- 🔭 [Cplaceholder](https://placeholder)
+_event_ : A Cognito post authorization lambda invocation Event.
 
-- 👤 [placeholder](https://placeholder)
+_context_ : A Cognito post authorization lambda invocation context.
 
-- 🚀 [placeholder](https://placeholder)
+_event['body']['key']_ : the key of the uploaded S3 object
+#### Output
+Respond if the user is authorized or not to go to mars
 
-- 👯 [placeholder](https://placeholder)
+To do so, you need to desing a challenging photo for the Mars Candidate 
+traveler, either to have their mouth open, eyes closed or whatever you want to 
+use in Rekognition DetectFaces.
 
-- :eye: [placeholder](https://placeholder)
-
-- 🤝 [Comandos Network](https://placeholder)
-
-
-## placeholder
-1. placeholder [placeholder](https://placeholder)
-    **placeholder:** placeholder
-    **placeholder:** placeholder
-
-### placeholder
-
-![](./images/emailcode.png)
+The image to be analized is going to be uploaded to the Key destination of the 
+OS environment variable bucket
 
 
 
-1. placeholder
-2. placeholder
-3. placeholder
-4. placeholder
+# Welcome to your CDK Python project!
 
-### placeholder
+This is a project for CDK development with Python.
 
-1. placeholder
+```
+$ python3 -m venv .venv
+```
 
-    `$ placeholder`
+After the init process completes and the virtualenv is created, you can use the following
+step to activate your virtualenv.
+
+```
+$ source .venv/bin/activate
+```
+
+If you are a Windows platform, you would activate the virtualenv like this:
+
+```
+% .venv\Scripts\activate.bat
+```
+
+Once the virtualenv is activated, you can install the required dependencies.
+
+```
+$ pip install -r requirements.txt
+```
+
+```
+$ cdk bootstrap
+```
 
 
-2. Confirma la instalacion:
+## Useful commands
 
-    `$ placeholder`
+ * `cdk ls`          list all stacks in the app
+ * `cdk synth`       emits the synthesized CloudFormation template
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk docs`        open CDK documentation
 
-    - placeholder:
-        ```
-            placeholder
-        ```
+Enjoy!
