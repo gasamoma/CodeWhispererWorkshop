@@ -1,7 +1,44 @@
+# Welcome to youd Code Whisperer module
 
-# CodeWhispererWorkshop
+---
+## Your tasks:
 
-To manually create a virtualenv on MacOS and Linux:
+### File web/scripts.js
+get_presigned_url(id_token)
+#### Input
+_id_token_ : This is the Bearer id_token from cognito. It does not contain the "bearer " part
+
+#### Output
+Response from the api_get lambda function response from API GateWay
+
+### File web/scripts.js
+
+submit_button_function(id_token)
+
+#### Input
+_id_token_ : This is the Bearer id_token from cognito. It does not contain the "bearer " part
+#### Output
+Show if the user is authorized to go to mars or not!
+
+To do so, you should upload the image to s3, then you would need to call the api_backend to check if the used photo passed the test 
+
+### File web/scripts.js
+uploadFile(signedUrl)
+#### Input
+signedUrl : This is the s3 PUT Presingned URL
+#### Output
+True if success, False otherwhise
+
+You have helper functions like 
+* showLoadingOverlay
+* hideLoadingOverlay
+* post
+* get
+* loadCredentials
+
+# Welcome to your CDK Python project!
+
+This is a project for CDK development with Python.
 
 ```
 $ python3 -m venv .venv
@@ -26,57 +63,17 @@ Once the virtualenv is activated, you can install the required dependencies.
 $ pip install -r requirements.txt
 ```
 
-<h1 align="center">ALIENNATION</h1>
-<h3 align="center">Front End</h3>
-
-## Tabla de Contenido
-
-- 🔭 [Cplaceholder](https://placeholder)
-
-- 👤 [placeholder](https://placeholder)
-
-- 🚀 [placeholder](https://placeholder)
-
-- 👯 [placeholder](https://placeholder)
-
-- :eye: [placeholder](https://placeholder)
-
-- 🤝 [Comandos Network](https://placeholder)
+```
+$ cdk bootstrap
+```
 
 
-## placeholder
-1. Debe autenticar contra cognito user pool *TBD1*
-2. debe capturar el nombre que ingresa el usario
-2. Debe tomar el token JWT para enviar un get request al backend *TBD2* y asi obtener una url firmada de s3 
-3. debe poder tomar una iagen que proporcione el usario y subirla a s3 usando la url firmada y guardando la URI del objeto
-4. debe enviar un request al backend *TBD3* para evaluar la valides del signup, el request debe contener lo siguiente en el payload:
-        - imagenURI: la uri de la imagen que se guardo en s3
-        - nombre: el nombre que ingreso el usario
-5. El api *TBD3* regresara la respuesta de si es aceptado o no, el front end debe mostrar la respuesta al usario
+## Useful commands
 
-### placeholder
+ * `cdk ls`          list all stacks in the app
+ * `cdk synth`       emits the synthesized CloudFormation template
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk docs`        open CDK documentation
 
-![](./images/emailcode.png)
-
-
-
-1. placeholder
-2. placeholder
-3. placeholder
-4. placeholder
-
-### placeholder
-
-1. placeholder
-
-    `$ placeholder`
-
-
-2. Confirma la instalacion:
-
-    `$ placeholder`
-
-    - placeholder:
-        ```
-            placeholder
-        ```
+Enjoy!

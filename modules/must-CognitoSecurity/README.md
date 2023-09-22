@@ -1,9 +1,9 @@
-# Welcome to youd Code Whisperer module
+# Welcome to youd Code Whisperer module Cognito Security
 
 ---
 ## Your tasks:
 
-### File web/scripts.js
+### File app/lambda/post_auth.py
 get_presigned_url(id_token)
 #### Input
 _id_token_ : This is the Bearer id_token from cognito. It does not contain the "bearer " part
@@ -11,30 +11,27 @@ _id_token_ : This is the Bearer id_token from cognito. It does not contain the "
 #### Output
 Response from the api_get lambda function response from API GateWay
 
-### File web/scripts.js
+### File app/lambda/post_auth.py
 
-submit_button_function(id_token)
+handler(event, context)
 
 #### Input
-_id_token_ : This is the Bearer id_token from cognito. It does not contain the "bearer " part
+_event_ : A Cognito post authorization lambda invocation Event.
+_context_ : A Cognito post authorization lambda invocation context.
 #### Output
-Show if the user is authorized to go to mars or not!
+Store in the Dynamo DB table the email of the user with the current timestamp
 
-To do so, you should upload the image to s3, then you would need to call the api_backend to check if the used photo passed the test 
-
-### File web/scripts.js
-uploadFile(signedUrl)
+### File app/security/security.py
+check_auth(event)
 #### Input
-signedUrl : This is the s3 PUT Presingned URL
+event : A Api Gateway Lambda proxy event(POST)
 #### Output
-True if success, False otherwhise
+True if POST_AUTH is == "1" and if there is any authentication within the last hour from the user in dynamoDb
+False Any other scenario
 
-You have helper functions like 
-* showLoadingOverlay
-* hideLoadingOverlay
-* post
-* get
-* loadCredentials
+You have the following Table schema 
+* 'user-email': 'S',
+* 'date': 'S'
 
 # Welcome to your CDK Python project!
 
