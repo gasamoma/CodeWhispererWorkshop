@@ -16,7 +16,9 @@ min_confidence = int(environ.get('CONFIDENCE', 70))
 # a lambda handler for the api gateway post
 def handler(event, context):
     ## SECURITY CHECK
-    security.check_auth(event)
+    print(security.POST_AUTH )
+    security.POST_AUTH = security.check_auth(event)
+    print(security.POST_AUTH )
     # get the body of the request
     body =  event['body']
     body = json.loads(body)
@@ -36,6 +38,7 @@ def handler(event, context):
     # sum the confidence values
     confidence = sum_confidence(eyes_open, mouth_open)
     # check if the user is authorized
+    print(eyes_open, mouth_open,confidence,eye_direction)
     check_if_authorized(confidence, eye_direction, security.POST_AUTH)
     # return the response
     return response
@@ -60,6 +63,12 @@ def get_eye_direction(response):
     
 #sum confidence value from eyes_open and mouth_open attributes
 def sum_confidence(eyes_open, mouth_open):
+    # if true sum the confidence values
+    confidence = 0
+    if eyes_open['Value']:
+        confidence = eyes_open['Confidence']
+    if mouth_open['Value']:
+        confidence = mouth_open['Confidence'] + confidence
     confidence = eyes_open['Confidence'] + mouth_open['Confidence']
     return confidence
     

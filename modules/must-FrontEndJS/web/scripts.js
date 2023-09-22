@@ -53,7 +53,7 @@ $(document).ready(function() {
             headers: headers
         });
     }
-    // a function that uses get to get the presigned url from this api https://gce33wbizd.execute-api.us-east-1.amazonaws.com/prod/api_backend and receives the id_token
+    // a function that uses get to get the presigned url from this api https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend and receives the id_token
     function get_presigned_url(id_token) {
         // create a header Authorization with the id_token
         headers = {
@@ -78,15 +78,8 @@ $(document).ready(function() {
         const objectKey = presignedUrl['presigned_url'].split('?')[0].split('/').pop();
         // do a post request to this endpoint /get_user_files
         post('https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend',{'key':objectKey}, headers).then(response => {
-
-            // and get the list of files from the response
-            const files = response;
-
-            // populate the dropdown with the list of files
-            populateDocumentDropdown(files);
-            // show the document selection UI
-            documentSelection.show();
-            $("#login-container").hide();
+            console.log(response);
+            hideLoadingOverlay();
             
         });
     }
@@ -122,22 +115,5 @@ $(document).ready(function() {
     }else {
         window.location.href = "https://cw-workshop-domain-demo.auth.us-east-1.amazoncognito.com/login?client_id=597e5f4rfac3sprtrd943h8jdg&response_type=token&redirect_uri=https://d2mj6f7u00o6eq.cloudfront.net/index.html"
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    // call the apigateway to get a signed url. 
-    //function getSignedUrl(fileName) {
-        // do a post request to the api
-        //return get('https://grl6bha8b4.execute-api.us-east-1.amazonaws.com/prod/get_signed_url');
-    //}
-    
- 
- 
-    
-    
+
 });

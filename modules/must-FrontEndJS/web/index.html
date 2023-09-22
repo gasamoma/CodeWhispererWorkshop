@@ -26,11 +26,13 @@
             
             <form>
                 <div class="image-upload-container">
-                    <input type="file" name="uploader" id="image-upload"accept="image/*" capture="camera">
+                    <input type="file" id="image-upload" accept="image/*">
+                    <label for="image-upload" class="custom-file-upload">
+                        <i class="fas fa-cloud-upload-alt"></i> Choose Image
+                    </label>
+                    <p>Selected Image:</p>
+                    <img id="selected-image" src="#" alt="Selected Image">
                 </div>
-            
-                <h1>Space Shuttle Sign-Up</h1>
-                <input type="text" name="username" placeholder="Enter your Name">
                 <button id="submit-button" type="button">Sign Up</button>
             </form>
         </div>

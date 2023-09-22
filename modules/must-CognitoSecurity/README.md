@@ -1,12 +1,44 @@
 # Welcome to youd Code Whisperer module
 
 ---
-### Your tasks:
--
+## Your tasks:
+
+### File web/scripts.js
+get_presigned_url(id_token)
+#### Input
+_id_token_ : This is the Bearer id_token from cognito. It does not contain the "bearer " part
+
+#### Output
+Response from the api_get lambda function response from API GateWay
+
+### File web/scripts.js
+
+submit_button_function(id_token)
+
+#### Input
+_id_token_ : This is the Bearer id_token from cognito. It does not contain the "bearer " part
+#### Output
+Show if the user is authorized to go to mars or not!
+
+To do so, you should upload the image to s3, then you would need to call the api_backend to check if the used photo passed the test 
+
+### File web/scripts.js
+uploadFile(signedUrl)
+#### Input
+signedUrl : This is the s3 PUT Presingned URL
+#### Output
+True if success, False otherwhise
+
+You have helper functions like 
+* showLoadingOverlay
+* hideLoadingOverlay
+* post
+* get
+* loadCredentials
 
 # Welcome to your CDK Python project!
 
-This is a blank project for CDK development with Python.
+This is a project for CDK development with Python.
 
 ```
 $ python3 -m venv .venv
