@@ -16,7 +16,7 @@ Actions:
     Inputs:
       # Optional
       Sources:
-        - Workflow_code_manager # This specifies that the action requires this Workflow as a source
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
     # Defines the action's properties.
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
