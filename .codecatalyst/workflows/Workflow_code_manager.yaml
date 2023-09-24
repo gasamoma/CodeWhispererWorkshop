@@ -1,0 +1,34 @@
+Name: Workflow_code_manager
+SchemaVersion: "1.0"
+
+# Optional - Set automatic triggers.
+Triggers:
+  - Type: PUSH
+    Branches:
+      - ws\/.*
+
+# Required - Define action configurations.
+Actions:
+  Build_MustFrontEndJsStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - Workflow_code_manager # This specifies that the action requires this Workflow as a source
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: echo "Creating branch"
+        - Run: chmod +x ./code_manager/create_workshop.sh
+        - Run: ./code_manager/create_workshop.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
