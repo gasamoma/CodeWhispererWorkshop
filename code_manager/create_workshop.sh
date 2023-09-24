@@ -6,5 +6,5 @@ sed -e "s~cw-workshop-domain-demo~cw-ws-$uuid~g" modules/must-ApiBackend/must_ap
 rm rf modules/must-FrontEndJS/web/scripts.bck.js modules/must-ApiBackend/must_api_backend/must_api_backend_stack.bck.py
 git add .
 git commit -m "first commit"
-git push origin uuid
+git push origin ws/$uuid
 echo "git checkout -b ws/$uuid"
