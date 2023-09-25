@@ -6,6 +6,7 @@ from aws_cdk import (
     aws_cloudfront as _cf,
     aws_s3_deployment as s3deploy,
     aws_cloudfront_origins as origins,
+    aws_ssm as ssm,
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -39,3 +40,8 @@ class MustFrontEndJsStack(Stack):
                 origin=origins.S3Origin(
                     s3_website_bucket,
                     origin_access_identity=oin)))
+        
+        redirect_uri="https://"+cloudfront_website.distribution_domain_name+"/index.html"
+        ssm.StringParameter(self, "CW-workshop-redirect_uri",
+            parameter_name="CW-workshop-redirect_uri",
+            string_value=redirect_uri)

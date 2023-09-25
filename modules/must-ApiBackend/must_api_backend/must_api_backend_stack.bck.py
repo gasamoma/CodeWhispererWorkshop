@@ -37,8 +37,7 @@ class MustApiBackendStack(Stack):
             pass
         # a cognito user pool that uses cognito managed login sign up and password recovery
         user_pool = _cognito.UserPool(
-            self, "IdpUserPool0",
-            user_pool_name="IdpUserPool0",
+            self, "CW-UserPool",
             self_sign_up_enabled=True,
             # removal policy destroy
             removal_policy=RemovalPolicy.DESTROY,

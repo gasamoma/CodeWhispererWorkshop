@@ -3,15 +3,85 @@ import json
 import boto3
 # run the security/security.py file
 from security import security
+import base64
+import logging
+from os import environ
 
 
-def lambda_handler(event, context):
-    print(event)
-    return {
-        "statusCode": 200,
-        "body": json.dumps(
-            {
-                "message": "hello world",
-            }
-        ),
-    }
+# Set up logging.
+logger = logging.getLogger(__name__)
+
+# Get the model ARN and confidence.
+min_confidence = int(environ.get('CONFIDENCE', 70))
+# a lambda handler for the api gateway post
+def handler(event, context):
+    ## SECURITY CHECK
+    print(security.POST_AUTH )
+    security.POST_AUTH = security.check_auth(event)
+    print(security.POST_AUTH )
+    # get the body of the request
+    body =  event['body']
+    body = json.loads(body)
+    key = body['key']
+    bucket = environ['BUCKET']
+    # get the user email from cognito
+    user_email = event['requestContext']['authorizer']['claims']['email']
+    # create the user path in s3 using the email
+    key = "cognito/"+user_email+"/"+key
+    print("bucket", bucket, "key", key)
+    # call the detect_faces function
+    response = detect_faces(bucket, key)
+    # get the eyes_open and mouth_open attributes
+    eyes_open, mouth_open = get_eyes_mouth_open(response)
+    # get the eye_direction
+    eye_direction = get_eye_direction(response)
+    # sum the confidence values
+    confidence = sum_confidence(eyes_open, mouth_open)
+    # check if the user is authorized
+    print(eyes_open, mouth_open,confidence,eye_direction)
+    check_if_authorized(confidence, eye_direction, security.POST_AUTH)
+    # return the response
+    return response
+
+#function that gets an image from an s3 bucket and calls rekognition detect_faces api to get the face attributes
+#returns the response
+def detect_faces(bucket, key):
+    rekognition = boto3.client('rekognition')
+    response = rekognition.detect_faces(Image={'S3Object': {'Bucket': bucket, 'Name': key}}, Attributes=['ALL'])
+    return response
+    
+#from response get EyesOpen, MouthOpen attributes and store them in variables
+def get_eyes_mouth_open(response):
+    eyes_open = response['FaceDetails'][0]['EyesOpen']
+    mouth_open = response['FaceDetails'][0]['MouthOpen']
+    return eyes_open, mouth_open
+
+#from response get EyeDirection yaw attribute and store it in a variable
+def get_eye_direction(response):
+    eye_direction = response['FaceDetails'][0]['EyeDirection']['Yaw']
+    return eye_direction
+    
+#sum confidence value from eyes_open and mouth_open attributes
+def sum_confidence(eyes_open, mouth_open):
+    # if true sum the confidence values
+    confidence = 0
+    if eyes_open['Value']:
+        confidence = eyes_open['Confidence']
+    if mouth_open['Value']:
+        confidence = mouth_open['Confidence'] + confidence
+    confidence = eyes_open['Confidence'] + mouth_open['Confidence']
+    return confidence
+    
+#if return confidence higher than 70, eye_direction higher than 150 and POST_AUTH variable exist print "you are invited to visit Mars"
+#else print "you are not invited to visit Mars"
+def check_if_authorized(confidence, eye_direction, POST_AUTH):
+    if confidence > min_confidence and eye_direction > 150 and POST_AUTH:
+        print("Congratulations! You are invited to visit Mars on the new GlueOrigin rocket!")
+    else:
+        print("you are not invited to visit Mars")
+
+    
+
+
+        
+        
