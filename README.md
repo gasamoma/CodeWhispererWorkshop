@@ -1,24 +1,18 @@
 # CodeWhispererWorkshop
 
-<h1 align="center">Today we are going to build! with AI!</h1>
+<h2 align="center">Today we are going to build! with AI!</h2>
 
 
 ## Contens
 
 - 🔭 [Modules and architecture](#modules-and-architecture)
 
-- 👤 [placeholder](https://placeholder)
+- 👤 [Start a new Workshop:](#how-to-start-a-new-workshop)
 
-- 🚀 [placeholder](https://placeholder)
-
-- 👯 [placeholder](https://placeholder)
-
-- :eye: [placeholder](https://placeholder)
-
-- 🤝 [Comandos Network](https://placeholder)
+- 🚀 [Toolkit](#toolkit)
 
 
-## Modules And Architecture
+### Modules And Architecture
 1. Please look at the must-modules architecture [Diagram](./architecture.jpg)
     
 **Modules Readme.md:** 
@@ -35,7 +29,7 @@ Readme, an automated CI/CD pipeline will attempt to deploy your application,
 be aware any changes made in the Javascript would probably need you to clear cache and hard Reload the website 
 
 
-### How To start a new Workshop:
+### How To start a new Workshop
 
 ![](./images/emailcode.png)
 
@@ -67,5 +61,6 @@ Code whisperer IDE Documentation [link](https://docs.aws.amazon.com/codewhispere
     - Function oriented: think first of the desired task and what does the function need to do.
     - Dont try to generate the perfect code! You can always work with the base, and correct it when is needed with embbeded comments.
     - Stop trying to lookup for documentations, try to assume codewhisperer understands the response type/structure of certain libraries.
+
 #### 3. Do NOT modify the stacks:
 The infrastructure allready has a CI/CD and it's supposed to run on each push of your current Workshop branch
