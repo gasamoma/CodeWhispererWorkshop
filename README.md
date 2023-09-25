@@ -40,24 +40,32 @@ be aware any changes made in the Javascript would probably need you to clear cac
 ![](./images/emailcode.png)
 
 
+1. Run: `chmod +x ./code_manager/create_workshop.sh`
+2. Run: `./code_manager/create_workshop.sh`
+3. You are already working on your workshop branch, if not:
+    1. `git branch -a`
+    2. `git branch checkout -b ws/{$uuid}`
 
-1. 
-2. placeholder
-3. placeholder
-4. placeholder
+### Toolkit
 
-### placeholder
+#### 1. Usefull Git commands
 
-1. placeholder
+- `git status` shows the changed files and the working branch
+- `git diff {File/path}` shows what changed in a particular file directory or all changes
+- `git add {.|File}` adds the file for a fowolling commit
+- `git restore {.|File}` rolls back any changes until the last commit
+- `git commit -m "{comment}"` packs all the tracked files changes into a commit with the comment
+- `git push origin ws/{branch}` pushes the commits into the remote branch
+- `git checkout {-b}` changes the current working branch {-b} for a new branch
 
-    `$ placeholder`
 
+#### 2. Activate code whisperer:
 
-2. Confirma la instalacion:
+Code whisperer IDE Documentation [link](https://docs.aws.amazon.com/codewhisperer/latest/userguide/getting-started.html)
 
-    `$ placeholder`
-
-    - placeholder:
-        ```
-            placeholder
-        ```
+- Suggestions for promts:
+    - Function oriented: think first of the desired task and what does the function need to do.
+    - Dont try to generate the perfect code! You can always work with the base, and correct it when is needed with embbeded comments.
+    - Stop trying to lookup for documentations, try to assume codewhisperer understands the response type/structure of certain libraries.
+#### 3. Do NOT modify the stacks:
+The infrastructure allready has a CI/CD and it's supposed to run on each push of your current Workshop branch
