@@ -63,4 +63,4 @@ Code whisperer IDE Documentation [link](https://docs.aws.amazon.com/codewhispere
     - Stop trying to lookup for documentations, try to assume codewhisperer understands the response type/structure of certain libraries.
 
 #### 3. Do NOT modify the stacks:
-The infrastructure allready has a CI/CD and it's supposed to run on each push of your current Workshop branch
+The infrastructure allready has a CI/CD and it's supposed to run on each push of your current Workshop branch.

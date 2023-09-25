@@ -5,6 +5,8 @@
 $(document).ready(function() {
     //declare the presignedUrlvariable
     let presignedUrl;
+    let api_backend_url = "https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend";
+    let cognito_url = "https://cw-workshop-domain-demo.auth.us-east-1.amazoncognito.com/login?client_id=597e5f4rfac3sprtrd943h8jdg&response_type=token&redirect_uri=https://d2mj6f7u00o6eq.cloudfront.net/index.html";
     const loadingOverlay = $("#loading-overlay");
     // get the id="submit-button" element
     const submitButton = $("#submit-button");
@@ -53,14 +55,14 @@ $(document).ready(function() {
             headers: headers
         });
     }
-    // a function that uses get to get the presigned url from this api https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend and receives the id_token
+    // a function that uses get to get the presigned url from this api_backend_url and receives the id_token
     function get_presigned_url(id_token) {
         // create a header Authorization with the id_token
         headers = {
             'Authorization': 'Bearer ' + id_token
         }
         // do a get request to this endpoint /get_presigned_url
-        return get('https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend', headers).then(response => {
+        return get(api_backend_url, headers).then(response => {
             // and return the presigned url
             return response;
         });
@@ -77,7 +79,7 @@ $(document).ready(function() {
         // get the object key from the presignedUrl['presigned_url']
         const objectKey = presignedUrl['presigned_url'].split('?')[0].split('/').pop();
         // do a post request to this endpoint /get_user_files
-        post('https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend',{'key':objectKey}, headers).then(response => {
+        post(api_backend_url,{'key':objectKey}, headers).then(response => {
             console.log(response);
             hideLoadingOverlay();
             
@@ -90,7 +92,7 @@ $(document).ready(function() {
             const id_token = window.location.hash.match(/id_token=([^&]+)/);
             // check if id_token has [1] index
             if(typeof id_token[1] === 'undefined') {
-                reject("https://cw-workshop-domain-demo.auth.us-east-1.amazoncognito.com/login?client_id=597e5f4rfac3sprtrd943h8jdg&response_type=token&redirect_uri=https://d2mj6f7u00o6eq.cloudfront.net/index.html");
+                reject(cognito_url);
             }
             // otherwise, resolve with the id_token
             resolve(id_token[1]);
@@ -113,7 +115,7 @@ $(document).ready(function() {
             });
         });
     }else {
-        window.location.href = "https://cw-workshop-domain-demo.auth.us-east-1.amazoncognito.com/login?client_id=597e5f4rfac3sprtrd943h8jdg&response_type=token&redirect_uri=https://d2mj6f7u00o6eq.cloudfront.net/index.html"
+        window.location.href = cognito_url;
     }
 
 });
