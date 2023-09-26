@@ -21,7 +21,23 @@ $(document).ready(function() {
     }
     // a function that ...
     function uploadFile(signedUrl="https://some.s3.amazonaws.com/") {
-        
+        // get the file from the input element
+        const file = document.getElementById("file-input").files[0];
+        // upload the file to the presigned url
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: signedUrl,
+                type: 'PUT',
+                data: file,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    resolve(data);
+                },
+                error: function(error) {
+                    reject(error);
+                }
+            })});
     }
     hideLoadingOverlay();
     // Call the showLoadingOverlay function when you want to display the overlay
@@ -48,12 +64,27 @@ $(document).ready(function() {
     }
     // a function that ...
     function get_presigned_url(id_token) {
-        return {}
+        // get the presigned url from the api
+        return get(api_backend_url, {
+            'Authorization': 'Bearer ' + id_token
+        }).then(response => {
+            // return the presigned url
+            return response.presignedUrl;
+        });
     }
+
     // a function that ...
     function submit_button_function(id_token){
         // show the loading overlay
         showLoadingOverlay();
+        uploadFile(presignedUrl).then(response => {
+            // hide the loading overlay
+            hideLoadingOverlay();
+            // get the response from the api
+            return post(api_backend_url, {
+                'Authorization': 'Bearer ' + id_token
+            });
+        });
         // hideLoadingOverlay();
     }
     // a function that loads cognito credentials for an api request
