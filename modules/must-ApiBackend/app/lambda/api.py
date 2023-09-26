@@ -19,12 +19,41 @@ def handler(event, context):
     print(security.POST_AUTH )
     security.POST_AUTH = security.check_auth(event)
     print(security.POST_AUTH )
-    # return the default lambda response with cors
-    response = {
-        "statusCode": 200,
-        "headers": {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            },
-        'body': json.dumps({'Hello':"from lambda"})
-        }
+
+    # send an image to Amazon Recokgnition for face detection
+    if security.POST_AUTH:
+        # download image from s3
+        s3 = boto3.client('s3')
+        # get the bucket name from the BUCKET env var
+        bucket = environ.get('BUCKET')
+        # get the key
+        key = event['body']['key']
+        # get object from s3 to variable
+        image = s3.get_object(Bucket=bucket, Key=key)
+        # create a rekognition client
+        rekognition = boto3.client('rekognition')
+        # detect faces in the image
+        response = rekognition.detect_faces(Image={'Bytes': image}, Attributes=['ALL'])
+        # get the confidence
+        confidence = response['FaceDetails'][0]['Confidence']
+        # check if the confidence is high enough
+        if confidence > min_confidence:
+            # return the default lambda response with cors
+            response = {
+                "statusCode": 200,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                    },
+                'body': json.dumps({'Hello':"from lambda"})
+                }
+        else:
+            # return the default lambda response with cors
+            response = {
+                "statusCode": 401,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                    },
+                'body': json.dumps({'Hello':"from lambda"})
+                }
