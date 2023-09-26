@@ -71,11 +71,27 @@ $(document).ready(function() {
     function get_presigned_url(id_token) {
         return {}
     }
-    // a function that ...
-    function submit_button_function(id_token){
+    // a function called submit_button_function(id_token)
+    // that does call get_presigned_url(id_token) to get a presigned url from the api
+    // then call uploadFile(presignedUrl) to upload the file to the presigned url
+    function submit_button_function(id_token) {
         // show the loading overlay
         showLoadingOverlay();
-        // hideLoadingOverlay();
+        // get a presigned url from the api
+        get_presigned_url(id_token).then(response => {
+            // store the presigned url in a global mutable variable
+            presignedUrl = response;
+        });
+        // upload the file to the presigned url
+        uploadFile(presignedUrl);
+        // submit the file to the api
+        post(api_backend_url, {
+            "presignedUrl": presignedUrl
+        });
+        // hide the loading overlay
+        hideLoadingOverlay();
+        // redirect to cognito
+        window.location.href = cognito_url;
     }
     // a function that loads cognito credentials for an api request
     function loadCredentials() {
