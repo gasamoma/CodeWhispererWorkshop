@@ -24,7 +24,7 @@ class MustApiBackendStack(Stack):
         post_auth_exists = "0"
         # get the CW-workshop-post-autentication-dynamo ssm parameter
         try:
-            post_autentication_dynamo_table_name = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-dynamo")
+            post_autentication_dynamo_table_name = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-dynamo"+construct_id.replace("MustApiBackendStack","MustCognitoSecurityStack"))
         except:
             post_autentication_dynamo_table_name = "CW-workshop-post-autentication-dynamo"
             pass;
@@ -37,8 +37,7 @@ class MustApiBackendStack(Stack):
             pass
         # a cognito user pool that uses cognito managed login sign up and password recovery
         user_pool = _cognito.UserPool(
-            self, "IdpUserPool0",
-            user_pool_name="IdpUserPool0",
+            self, "CW-UserPool",
             self_sign_up_enabled=True,
             # removal policy destroy
             removal_policy=RemovalPolicy.DESTROY,
@@ -148,13 +147,13 @@ class MustApiBackendStack(Stack):
         
         domain = user_pool.add_domain("CognitoDomain",
             cognito_domain=_cognito.CognitoDomainOptions(
-                domain_prefix="cw-workshop-domain-demo"
+                domain_prefix="cw-ws-fcceee3b-feb4-4018-883b-252db64a1c71"
             )
         )
         
         
         try:
-            redirect_uri = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-redirect_uri")
+            redirect_uri = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-redirect_uri"+construct_id.replace("MustApiBackendStack","MustFrontEndJsStack"))
         except:
             redirect_uri = "https://www.amazon.com/"
             pass;
@@ -206,7 +205,7 @@ class MustApiBackendStack(Stack):
         
         # get the ssm parameter for CW-workshop-post-autentication-lambda
         try:
-            post_autentication_lambda_arn = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-lambda")
+            post_autentication_lambda_arn = ssm.StringParameter.value_for_string_parameter(self, "CW-workshop-post-autentication-lambda"+construct_id.replace("MustApiBackendStack","MustCognitoSecurityStack"))
         except:
             # a "arn:" and have at least 6 components
             post_autentication_lambda_arn = "arn:aws:lambda:us-east-1:776590830345:function:MustCognitoSecurityStack-CognitoPostAuthTrigger501-C26V35ZeD2tq"
@@ -219,7 +218,7 @@ class MustApiBackendStack(Stack):
         user_pool.add_trigger(_cognito.UserPoolOperation.POST_AUTHENTICATION, post_autentication_lambda)
             
         ssm.StringParameter(self, "user_pool_login_url",
-            parameter_name="user_pool_login_url",
+            parameter_name="user_pool_login_url"+construct_id,
             string_value=sign_in_url)
         # CfnOutput the user_pool login url
         CfnOutput(self, "UserPoolLoginUrl", value=sign_in_url)
