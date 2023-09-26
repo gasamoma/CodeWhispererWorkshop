@@ -1,0 +1,218 @@
+Name: Workflow_branch1
+SchemaVersion: "1.0"
+
+# Optional - Set automatic triggers.
+Triggers:
+  - Type: PUSH
+    Branches:
+      - ws\/.*
+
+# Required - Define action configurations.
+Actions:
+  AWSCDKBootstrap_MustCognitoSecurityStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-bootstrap@v1.0.7
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustCognitoSecurityStackArtifact
+    Compute:
+      Type: Lambda
+    Configuration:
+      Region: us-east-1
+    DependsOn:
+      - Build_MustCognitoSecurityStack
+  AWSCDKBootstrap_MustApiBackendStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-bootstrap@v1.0.7
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustApiBackendStackArtifact
+    Compute:
+      Type: Lambda
+    Configuration:
+      Region: us-east-1
+    DependsOn:
+      - Build_MustApiBackendStack
+  AWSCDKBootstrap_MustFrontEndJsStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-bootstrap@v1.0.7
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustFrontEndJsStackArtifact
+    Compute:
+      Type: Lambda
+    Configuration:
+      Region: us-east-1
+    DependsOn:
+      - Build_MustFrontEndJsStack
+  AWSCDKDeploy_MustCognitoSecurityStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-deploy@v1.0.12
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustCognitoSecurityStackArtifact
+    Compute:
+      Type: EC2
+    Configuration:
+      StackName: MustCognitoSecurityStack-branch1
+      Region: us-east-1
+      CdkRootPath: modules/must-CognitoSecurity/
+    DependsOn:
+      - AWSCDKBootstrap_MustCognitoSecurityStack
+  AWSCDKDeploy_MustApiBackendStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-deploy@v1.0.12
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustApiBackendStackArtifact
+    Compute:
+      Type: EC2
+    Configuration:
+      StackName: MustApiBackendStack-branch1
+      Region: us-east-1
+      CdkRootPath: modules/must-ApiBackend/
+    DependsOn:
+      - AWSCDKBootstrap_MustApiBackendStack
+  AWSCDKDeploy_MustFrontEndJsStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/cdk-deploy@v1.0.12
+    # Required; You can use an environment, AWS account connection, and role to access AWS resources.
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      Artifacts:
+        - MustFrontEndJsStackArtifact
+    Compute:
+      Type: EC2
+    Configuration:
+      StackName: MustFrontEndJsStack-branch1
+      Region: us-east-1
+      CdkRootPath: modules/must-FrontEndJS/
+    DependsOn:
+      - AWSCDKBootstrap_MustFrontEndJsStack
+  Build_MustCognitoSecurityStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: cd modules/must-CognitoSecurity/
+        - Run: pip install -r requirements.txt
+        - Run: chmod +x ./layer_lib.sh
+        - Run: ./layer_lib.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    Outputs:
+      Artifacts:
+        - Name: MustCognitoSecurityStackArtifact
+          Files:
+            - "modules/must-CognitoSecurity/**/*"
+  Build_MustApiBackendStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: cd modules/must-ApiBackend/
+        - Run: pip install -r requirements.txt
+        - Run: chmod +x ./layer_lib.sh
+        - Run: ./layer_lib.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    Outputs:
+      Artifacts:
+        - Name: MustApiBackendStackArtifact
+          Files:
+            - "modules/must-ApiBackend/**/*"
+  Build_MustFrontEndJsStack:
+    # Identifies the action. Do not modify this value.
+    Identifier: aws/build@v1.0.0
+    # Specifies the source and/or artifacts to pass to the action as input.
+    Inputs:
+      # Optional
+      Sources:
+        - WorkflowSource # This specifies that the action requires this Workflow as a source
+    # Defines the action's properties.
+    Configuration:
+      # Required - Steps are sequential instructions that run shell commands
+      Steps:
+        - Run: cd modules/must-FrontEndJS/
+        - Run: pip install -r requirements.txt
+        - Run: chmod +x ./layer_lib.sh
+        - Run: ./layer_lib.sh
+    Compute:
+      Type: EC2
+      Fleet: Linux.x86-64.Large
+    Environment:
+      Connections:
+        - Role: CodeCatalystWorkflowDevelopmentRole-CodingWorkshops
+          Name: "776590830345"
+      Name: workshop
+    Outputs:
+      Artifacts:
+        - Name: MustFrontEndJsStackArtifact
+          Files:
+            - "modules/must-FrontEndJS/**/*"
