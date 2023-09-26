@@ -7,7 +7,7 @@ from must_cognito_security.must_cognito_security_stack import MustCognitoSecurit
 
 
 app = cdk.App()
-MustCognitoSecurityStack(app, "MustCognitoSecurityStack",
+MustCognitoSecurityStack(app, "MustCognitoSecurityStack-78e52dcb-30dd-447f-bcc3-da13985e7c24",
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
