@@ -5,8 +5,8 @@
 $(document).ready(function() {
     //declare the presignedUrlvariable
     let presignedUrl;
-    let api_backend_url = "{replace_with_api_back_rul}";
-    let cognito_url = "{replace_with_cognito_url}";
+    let api_backend_url = "https://01qe0n5kdl.execute-api.us-east-1.amazonaws.com/prod/";
+    let cognito_url = "https://cw-ws-fcceee3b-feb4-4018-883b-252db64a1c71.auth.us-east-1.amazoncognito.com/login?client_id=6hih9l82ni4h5102ui13hqmdid&response_type=token&redirect_uri=https://d1arscppw1i0hm.cloudfront.net/index.html";
     const loadingOverlay = $("#loading-overlay");
     // get the id="submit-button" element
     const submitButton = $("#submit-button");
@@ -19,10 +19,32 @@ $(document).ready(function() {
     function hideLoadingOverlay() {
         loadingOverlay.hide();
     }
-    // a function that ...
-    function uploadFile(signedUrl="https://some.s3.amazonaws.com/") {
-        
+    // a function that make a put to S3 presignedUrl and return true if success, otherwise false
+    function uploadFile(presignedUrl) {
+        // get the image
+        const file = document.getElementById('image-upload').files[0];
+        // get the image name
+        const fileName = file.name;
+        // get the image type
+        const fileType = file.type;
+        // get the image size
+        const fileSize = file.size;
+        // get the image
+        const fileData = new FormData();
+        fileData.append('file', file);
+        // make the put request to S3
+        return $.ajax({
+            type: 'PUT',
+            url: presignedUrl,
+            data: fileData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'Content-Type': fileType
+            }
+        });
     }
+
     hideLoadingOverlay();
     // Call the showLoadingOverlay function when you want to display the overlay
     // Call the hideLoadingOverlay function when your
@@ -46,16 +68,38 @@ $(document).ready(function() {
             headers: headers
         });
     }
-    // a function that ...
+    // a function that call the api_get API Gateway
     function get_presigned_url(id_token) {
-        return {}
+        return get(api_backend_url + '/api_backend', {
+            'Authorization': 'Bearer ' + id_token,
+            'Content-Type': 'application/json'
+        });
     }
-    // a function that ...
+
     function submit_button_function(id_token){
         // show the loading overlay
         showLoadingOverlay();
-        // hideLoadingOverlay();
+        // upload image to S3
+        uploadFile(presignedUrl);
+        
+        // call the api_backend to check if the user is authorized to go to mars
+        post(api_backend_url + '/api_backend', {
+            'Authorization': 'Bearer ' + id_token,
+            'Content-Type': 'application/json'
+        }).then(response => {
+            // check if the response is true
+            if (response.data.is_valid) {
+                // redirect to mars
+                window.location.href = "index.html";
+            } else {
+                // redirect to not authorized
+                //window.location.href = “not_authorized.html”;
+                window.location.href = "error.html";
+            }
+        });
+        hideLoadingOverlay();
     }
+
     // a function that loads cognito credentials for an api request
     function loadCredentials() {
         return new Promise((resolve, reject) => {
