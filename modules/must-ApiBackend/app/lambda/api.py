@@ -37,7 +37,7 @@ def handler(event, context):
         # get the confidence
         confidence = response['FaceDetails'][0]['Confidence']
         # check if the confidence is high enough
-        if confidence > min_confidence:
+        if confidence > min_confidence and response['FaceDetails'][0]['MouthOpen']['Value']:
             # return the default lambda response with cors
             response = {
                 "statusCode": 200,
