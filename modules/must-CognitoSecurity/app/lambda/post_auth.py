@@ -7,12 +7,16 @@ import time
 # a function that ...
 def handler(event, context):
 
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            },
-        'body': json.dumps({'Hello':"from lambda"})
-        }
-                            
+    resource_db = boto3.resource('dynamodb')
+    table = resource_db.Table(os.environ['DYNAMODB_TABLE'])
+
+    key = {}
+    key['user-email'] = event['request']['userAttributes']['email']
+    key['date'] = str(int(time.time()))
+
+    table.put_item(Item=key)
+
+   return event
+
+
+
