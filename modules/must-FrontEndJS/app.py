@@ -7,7 +7,7 @@ from must_front_end_js.must_front_end_js_stack import MustFrontEndJsStack
 
 
 app = cdk.App()
-MustFrontEndJsStack(app, "MustFrontEndJsStack",
+MustFrontEndJsStack(app, "MustFrontEndJsStack-6149be37-44cc-4e1b-a571-7a0dc85ccd45",
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.

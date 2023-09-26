@@ -7,7 +7,7 @@ from must_api_backend.must_api_backend_stack import MustApiBackendStack
 
 
 app = cdk.App()
-MustApiBackendStack(app, "MustApiBackendStack",
+MustApiBackendStack(app, "MustApiBackendStack-6149be37-44cc-4e1b-a571-7a0dc85ccd45",
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
