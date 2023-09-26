@@ -3,7 +3,7 @@
 <h2 align="center">Today we are going to build! with AI!</h2>
 
 
-## Contens
+## Contents
 
 - 🔭 [Modules and architecture](#modules-and-architecture)
 
