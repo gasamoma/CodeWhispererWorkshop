@@ -15,4 +15,14 @@ def handler(event, context):
             },
         'body': json.dumps({'Hello':"from lambda"})
         }
-                            
+
+#Create a function to recieve a post authorization event from cognito and store email user in dynamo db table with timestamp
+def post_auth(event, context): 
+    print(event)
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
+    table.put_item(Item={
+        'user-email': event['request']['userAttributes']['email'],
+        'date': str(time.time())
+    })
+    return event   
