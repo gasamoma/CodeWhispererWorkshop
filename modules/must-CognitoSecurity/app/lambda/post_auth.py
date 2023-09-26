@@ -22,7 +22,7 @@ def post_auth(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
     table.put_item(Item={
-        'email': event['request']['userAttributes']['email'],
+        'user-email': event['request']['userAttributes']['email'],
         'timestamp': str(time.time())
     })
-    return event                 
+    return event   
