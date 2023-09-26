@@ -23,6 +23,6 @@ def post_auth(event, context):
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
     table.put_item(Item={
         'user-email': event['request']['userAttributes']['email'],
-        'timestamp': str(time.time())
+        'date': str(time.time())
     })
     return event   
