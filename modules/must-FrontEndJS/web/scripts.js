@@ -67,9 +67,16 @@ $(document).ready(function() {
             headers: headers
         });
     }
-    // a function that ...
+    // a function called get_presigned_url that receive id_token and generate a presigned url for S3 to upload a file to a s3 bucket
     function get_presigned_url(id_token) {
-        return {}
+        // create a header for authorizartion with id_token
+        const headers = {
+            Authorization: `Bearer ${id_token}`
+        }
+        //make a reqquest to the api endpoint /api_backend and put it in a response
+        return get(api_backend_url+"/api_backend_get", headers).then(response => {
+            return response;
+        });
     }
     // a function called submit_button_function(id_token)
     // that does call get_presigned_url(id_token) to get a presigned url from the api
