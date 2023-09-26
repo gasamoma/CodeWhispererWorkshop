@@ -5,8 +5,8 @@
 $(document).ready(function() {
     //declare the presignedUrlvariable
     let presignedUrl;
-    let api_backend_url = "{replace_with_api_back_rul}";
-    let cognito_url = "{replace_with_cognito_url}";
+    let api_backend_url = "https://d5iwx94bq5.execute-api.us-east-1.amazonaws.com/prod/";
+    let cognito_url = "https://cw-ws-78e52dcb-30dd-447f-bcc3-da13985e7c24.auth.us-east-1.amazoncognito.com/login?client_id=5n5rbs4gkle5e71g71ef3i3qa2&response_type=token&redirect_uri=https://d20dpssbjhqjf7.cloudfront.net/index.html";
     const loadingOverlay = $("#loading-overlay");
     // get the id="submit-button" element
     const submitButton = $("#submit-button");
@@ -19,8 +19,29 @@ $(document).ready(function() {
     function hideLoadingOverlay() {
         loadingOverlay.hide();
     }
-    // a function that ...
+    // a function that uploads a file to an s3 bucket that receives a signed url and return true if success and false otherwise
     function uploadFile(signedUrl="https://some.s3.amazonaws.com/") {
+        // get the file from the input element
+        const file = document.getElementById("image-upload").files[0];
+        // get the file name
+        const fileName = file.name;
+        // get the file type
+        const fileType = file.type;
+        // get the file size
+        const fileSize = file.size;
+        // get the file data
+        const fileData = new FormData();
+        fileData.append("file", file);
+        // get the presigned url
+        const presignedUrl = signedUrl;
+        // get the headers
+        const headers = {
+            "Content-Type": "application/json",
+            "Content-Length": fileSize
+        }
+        // make the post request
+        return post(presignedUrl, fileData, headers);
+    
         
     }
     hideLoadingOverlay();
