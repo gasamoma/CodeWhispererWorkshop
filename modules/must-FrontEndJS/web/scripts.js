@@ -5,8 +5,8 @@
 $(document).ready(function() {
     //declare the presignedUrlvariable
     let presignedUrl;
-    let api_backend_url = "https://pse9phfk51.execute-api.us-east-1.amazonaws.com/prod/api_backend";
-    let cognito_url = "https://cw-workshop-domain-demo.auth.us-east-1.amazoncognito.com/login?client_id=597e5f4rfac3sprtrd943h8jdg&response_type=token&redirect_uri=https://d2mj6f7u00o6eq.cloudfront.net/index.html";
+    let api_backend_url = "{replace_with_api_back_rul}";
+    let cognito_url = "{replace_with_cognito_url}";
     const loadingOverlay = $("#loading-overlay");
     // get the id="submit-button" element
     const submitButton = $("#submit-button");
@@ -19,18 +19,9 @@ $(document).ready(function() {
     function hideLoadingOverlay() {
         loadingOverlay.hide();
     }
-    // a function that takes an s3 signed url as a parameter and uses it to upload a file. 
+    // a function that ...
     function uploadFile(signedUrl="https://some.s3.amazonaws.com/") {
-        // get the file from the input
-        const file = $("#image-upload")[0].files[0];
-        // make a request to the signed url
-        $.ajax({
-            contentType: 'binary/octet-stream',
-            url: signedUrl,
-            type: 'PUT',
-            data: file,
-            processData: false
-        });
+        
     }
     hideLoadingOverlay();
     // Call the showLoadingOverlay function when you want to display the overlay
@@ -55,35 +46,15 @@ $(document).ready(function() {
             headers: headers
         });
     }
-    // a function that uses get to get the presigned url from this api_backend_url and receives the id_token
+    // a function that ...
     function get_presigned_url(id_token) {
-        // create a header Authorization with the id_token
-        headers = {
-            'Authorization': 'Bearer ' + id_token
-        }
-        // do a get request to this endpoint /get_presigned_url
-        return get(api_backend_url, headers).then(response => {
-            // and return the presigned url
-            return response;
-        });
+        return {}
     }
+    // a function that ...
     function submit_button_function(id_token){
         // show the loading overlay
         showLoadingOverlay();
-        // upload the file to the presigned url using uploadFile
-        uploadFile(presignedUrl['presigned_url']);
-        // create a header Authorization with the id_token
-        headers= {
-             'Authorization': 'Bearer '+id_token
-         }
-        // get the object key from the presignedUrl['presigned_url']
-        const objectKey = presignedUrl['presigned_url'].split('?')[0].split('/').pop();
-        // do a post request to this endpoint /get_user_files
-        post(api_backend_url,{'key':objectKey}, headers).then(response => {
-            console.log(response);
-            hideLoadingOverlay();
-            
-        });
+        // hideLoadingOverlay();
     }
     // a function that loads cognito credentials for an api request
     function loadCredentials() {
