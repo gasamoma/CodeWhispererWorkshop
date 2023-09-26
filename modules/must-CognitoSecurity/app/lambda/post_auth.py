@@ -16,7 +16,7 @@ def handler(event, context):
 
     table.put_item(Item=key)
 
-   return event
+   return 1
 
 
 
